@@ -5,6 +5,8 @@
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
 </head>
 <body>
-	<h1>{{ now }} {{ temperature }}C</h1>
-	<img src="https://www.yr.no/en/content/2-2693678/meteogram.svg" alt="YR" width="100%" height="auto">
+	<h1 style="font-size: 80px; text-align: center">{{ now }} {{ lund_temperature }}&deg;C</h1>
+	<div id="smhi">
+		<img src="https://www.yr.no/en/content/2-2693678/meteogram.svg" alt="YR" width="100%" height="auto">
+	</div>
 </body>

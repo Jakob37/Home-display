@@ -11,7 +11,7 @@ def index():
     now = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
     lund_lat = 55.7047
     lund_long = 13.1910
-    temperature = get_temperature(lund_lat, lund_long)
+    lund_temperature = round(get_temperature(lund_lat, lund_long))
     return render_template("app.html", **locals())
 
 @app.route("/user/")
