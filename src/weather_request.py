@@ -17,16 +17,4 @@ def get_temperature(latitude: float, longitude: float) -> float:
         if time.startswith(current_time):
             return data['data']['instant']['details']['air_temperature']
     raise ValueError(f"Current time not found: {current_time}")
-    # print(data)
-    #return -1
-    #current_time = datetime.now().isoformat(timespec='minutes')
-    
-
-#lund_lat = 55.7047
-#lund_long = 13.1910
-#temperature = get_weather(lund_lat, lund_long)
-#print(temperature)
-
-
-
 
