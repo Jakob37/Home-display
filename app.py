@@ -8,7 +8,8 @@ import datetime
 @app.route("/")
 def index():
     title = "Home display"
-    now = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
+    my_clock = str(datetime.datetime.now().strftime("%H:%M"))
+    my_date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
     lund_lat = 55.7047
     lund_long = 13.1910
     lund_temperature = round(get_temperature(lund_lat, lund_long))

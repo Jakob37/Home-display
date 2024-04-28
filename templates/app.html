@@ -1,11 +1,12 @@
 <head>
 	<title>{{ title }}</title>
-	<meta http-equiv="refresh" content="60" />
+	<meta http-equiv="refresh" content="120" />
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
 </head>
 <body>
-	<h1 style="font-size: 80px; text-align: center">{{ now }} {{ lund_temperature }}&deg;C</h1>
+	<h1 style="font-size: 80px; text-align: center">{{ my_clock }} {{ lund_temperature }}&deg;C</h1>
+	<h1 style="text-align: center">{{ my_date }}</h1>
 	<div id="smhi">
 		<img src="https://www.yr.no/en/content/2-2693678/meteogram.svg" alt="YR" width="100%" height="auto">
 	</div>
