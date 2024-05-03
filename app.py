@@ -23,6 +23,11 @@ def index():
     lund_temperature = round(get_temperature(lund_lat, lund_long))
     return render_template("app.html", **locals())
 
+@app.route("/clock")
+def get_clock():
+    clock = str(datetime.datetime.now().strftime("%H:%M:%S"))
+    return str(clock)
+
 @app.route("/user/")
 def hello_user():
     users = ["Xuan", "Jakob", "Alvar"]
