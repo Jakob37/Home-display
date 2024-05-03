@@ -6,16 +6,22 @@
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
 </head>
 <body>
-	<h1 style="font-size: 80px; text-align: center">
-		<span hx-get="/clock" hx-trigger="every 1s" hx-swap="innerHTML">Loading...</span>&nbsp;{{ lund_temperature }}&deg;C</h1>
+	<div hx-post="/toggleclock" hx-trigger="click">
+		<h1 style="font-size: 80px; text-align: center">
+			<span hx-get="/clock" hx-trigger="every 1s" hx-swap="innerHTML">
+				Loading...
+			</span>
+			&nbsp;{{ lund_temperature }}&deg;C
+		</h1>
+	</div>
 
 	<!--
 	<div hx-target="htmx_clock" hx-get="/clock" hx-trigger="every 1s" hx-swap="innerHTML">
 		Loading...
 	</div>
-	-->
 
 	<div id="smhi">
 		<img src="https://www.yr.no/en/content/2-2693678/meteogram.svg" alt="YR" width="100%" height="auto">
 	</div>
+	-->
 </body>

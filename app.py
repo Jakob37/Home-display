@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from src.weather_request import get_temperature
 from src.traffic import get_train_table_zip
 app = Flask(__name__)
@@ -9,6 +9,9 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read('app.config')
+
+cache = dict()
+cache['clock_seconds'] = False
 
 @app.route("/")
 def index():
@@ -25,8 +28,19 @@ def index():
 
 @app.route("/clock")
 def get_clock():
-    clock = str(datetime.datetime.now().strftime("%H:%M:%S"))
+    if cache['clock_seconds']:
+        clock = str(datetime.datetime.now().strftime("%H:%M:%S"))
+    else:
+        clock = str(datetime.datetime.now().strftime("%H:%M"))
     return str(clock)
+
+@app.route("/toggleclock", methods=['POST'])
+def toggle_clock():
+    cache['clock_seconds'] = not cache['clock_seconds']
+    print(f"clock_seconds: {cache['clock_seconds']}")
+    resp = jsonify(success=True)
+    print(resp)
+    #return resp
 
 @app.route("/user/")
 def hello_user():
