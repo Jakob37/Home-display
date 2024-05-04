@@ -3,6 +3,7 @@
 from flask import Flask, render_template, jsonify
 from src.weather_request import get_temperature
 from src.traffic import get_train_table_zip
+from src.pollen import get_pollen
 app = Flask(__name__)
 import datetime
 import configparser
@@ -24,6 +25,9 @@ def index():
     lund_lat = config['weather']['lat']
     lund_long = config['weather']['long']
     lund_temperature = round(get_temperature(lund_lat, lund_long))
+
+    pollen = get_pollen(config['pollen']['city'])
+
     return render_template("app.html", **locals())
 
 @app.route("/clock")
