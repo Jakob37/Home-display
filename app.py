@@ -27,6 +27,7 @@ def index():
     lund_temperature = round(get_temperature(lund_lat, lund_long))
 
     pollen = get_pollen(config['pollen']['city'])
+    print(f"pollen {pollen}")
 
     return render_template("app.html", **locals())
 
