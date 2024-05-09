@@ -4,8 +4,14 @@ from bs4 import BeautifulSoup
 def get_pollen(city: str) -> dict[str,str]:
 
     URL = f"https://pollenkoll.se/pollenprognos/{city}"
-
-    response = requests.get(URL)
+   
+    response = None
+    try:
+        res = requests.get(URL)
+        res.raise_for_status()
+        response = res
+    except requests.exceptions.RequestException as e:
+        return {'Error': str(e)}
 
     pollen_dict = dict()
     if response.status_code == 200:
