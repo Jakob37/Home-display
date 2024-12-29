@@ -15,6 +15,7 @@ cache = dict()
 cache['clock_seconds'] = False
 
 USE_LOCAL = True
+DEBUG_MODE = True
 
 @app.route("/")
 def index():
@@ -33,7 +34,8 @@ def index():
         lund_temperature = round(get_temperature(lund_lat, lund_long))
 
     if USE_LOCAL:
-        pollen = {"placeholder": "test"}
+        pollen = {}
+        # pollen = {"Pollen 1": "A lot", "Pollen 2": "Not so much"}
     else:
         pollen = get_pollen(config['pollen']['city'])
     print(f"pollen {pollen}")
@@ -85,5 +87,5 @@ def second_page():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=DEBUG_MODE)
 

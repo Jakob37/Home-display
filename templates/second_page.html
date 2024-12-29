@@ -3,9 +3,16 @@
     <head>
         <meta charset="UTF-8">
         <title>Second page</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
     </head>
     <body>
         <h1>This is the second page</h1>
-        <a href="">Go to first</a>
+        <a href="/" class="icon-button" title="Weather">
+            <i class="fas fa-cloud-sun"></i>
+        </a>
+        <a href="/second" class="icon-button" title="Food">
+            <i class="fas fa-utensils"></i>
+        </a>
     </body>
 </html>

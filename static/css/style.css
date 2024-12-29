@@ -12,3 +12,37 @@ body {
 	margin-top: -140px;
 	margin-bottom: -40px;
 }
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-family: 'Roboto', sans-serif;
+	padding: 10px;
+}
+
+.buttons {
+	display: flex;
+	align-items: center;
+}
+
+.icon-button {
+	display: inline-block;
+	padding: 8px 12px;
+	color: #333;
+	background-color: #ddd;
+	border: none;
+	border-radius: 5px;
+	text-decoration: none;
+	margin-right: 10px;
+	transition: background-color 0.3s ease;
+}
+
+.icon-button i {
+	font-size: 40px;
+}
+
+.clock {
+	text-align: right;
+	flex-grow: 1;
+}

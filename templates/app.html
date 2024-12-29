@@ -4,16 +4,35 @@
 	<script src="https://cdn.jsdelivr.net/npm/htmx.org@1.9.12/dist/htmx.js"></script>
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-	<div hx-post="/toggleclock" hx-trigger="click">
-		<h1 style="font-size: 80px; text-align: center">
-			<span hx-get="/clock" hx-trigger="every 10s" hx-swap="innerHTML">
-				Loading...
+
+	<div class="header">
+		<div class="buttons">
+			<a href="/" class="icon-button" title="Weather">
+				<i class="fas fa-cloud-sun"></i>
+			</a>
+			<a href="/second" class="icon-button" title="Food">
+				<i class="fas fa-utensils"></i>
+			</a>
+		</div>
+		
+		<div class="clock">
+			<span hx-post="/toggleclock" hx-trigger="click">
+				<span style="font-size: 80px; text-align: center">
+					<span hx-get="/clock" hx-trigger="every 10s" hx-swap="innerHTML">
+						Loading...
+					</span>
+					&nbsp;{{ lund_temperature }}&deg;C
+				</span>
 			</span>
-			&nbsp;{{ lund_temperature }}&deg;C
-		</h1>
+		</div>
+
 	</div>
+
+
 
 	<div id="smhi">
 		{% if use_local %}
@@ -28,6 +47,4 @@
 			<div style="font-size: 30px">{{key}}: {{value}}</div>
 		{% endfor %}
 	</div>
-
-	<a href="/second">Go to second page</a>
 </body>
