@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	{% include 'head.html' %}
+    {% block head_content %}
+    {% endblock %}
+    </head>
+    <body>
+        <div class="header">
+            <div class="buttons">
+                <a href="/" class="icon-button" title="Weather">
+                    <i class="fas fa-cloud-sun"></i>
+                </a>
+                <a href="/eating" class="icon-button" title="Food">
+                    <i class="fas fa-utensils"></i>
+                </a>
+            </div>
+            <div class="title">
+                {% block title_content %}
+
+                {% endblock %}
+            </div>
+        </div>
+
+        <div class="main-content">
+            {% block main_content %}
+
+            {% endblock %}
+        </div>
+    </body>
+</html>

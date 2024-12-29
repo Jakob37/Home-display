@@ -58,7 +58,7 @@ def index():
     #     pollen
     # }
 
-    return render_template("app.html", **data)
+    return render_template("weather.html", **data)
 
 @app.route("/clock")
 def get_clock():
@@ -81,9 +81,12 @@ def hello_user():
     users = ["Xuan", "Jakob", "Alvar"]
 
 
-@app.route("/second")
-def second_page():
-    return render_template("second_page.html")
+@app.route("/eating")
+def eating_page():
+    data = {
+        "title": "Eating"
+    }
+    return render_template("eating_plan.html", **data)
 
 
 if __name__ == "__main__":
