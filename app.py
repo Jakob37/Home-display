@@ -14,6 +14,8 @@ config.read('app.config')
 cache = dict()
 cache['clock_seconds'] = False
 
+USE_LOCAL = True
+
 @app.route("/")
 def index():
     title = "Home display"
@@ -24,12 +26,37 @@ def index():
     my_date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
     lund_lat = config['weather']['lat']
     lund_long = config['weather']['long']
-    lund_temperature = round(get_temperature(lund_lat, lund_long))
 
-    pollen = get_pollen(config['pollen']['city'])
+    if USE_LOCAL:
+        lund_temperature = -37
+    else:
+        lund_temperature = round(get_temperature(lund_lat, lund_long))
+
+    if USE_LOCAL:
+        pollen = {"placeholder": "test"}
+    else:
+        pollen = get_pollen(config['pollen']['city'])
     print(f"pollen {pollen}")
 
-    return render_template("app.html", **locals())
+    data = {
+        "use_local": USE_LOCAL,
+        "title": title,
+        "my_clock": my_clock,
+        "my_date": my_date,
+        "lund_temperature": lund_temperature,
+        "pollen": pollen
+    }
+
+    # data = {
+    #     use_local = USE_LOCAL,
+    #     title,
+    #     my_clock,
+    #     my_date,
+    #     lund_temperature,
+    #     pollen
+    # }
+
+    return render_template("app.html", **data)
 
 @app.route("/clock")
 def get_clock():
@@ -50,6 +77,11 @@ def toggle_clock():
 @app.route("/user/")
 def hello_user():
     users = ["Xuan", "Jakob", "Alvar"]
+
+
+@app.route("/second")
+def second_page():
+    return render_template("second_page.html")
 
 
 if __name__ == "__main__":
