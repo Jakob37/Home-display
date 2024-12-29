@@ -1,24 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        {% include 'head.html' %}
-    </head>
-    <body>
-        <div class="header">
-            <div class="buttons">
-                <a href="/" class="icon-button" title="Weather">
-                    <i class="fas fa-cloud-sun"></i>
-                </a>
-                <a href="/eating" class="icon-button" title="Food">
-                    <i class="fas fa-utensils"></i>
-                </a>
-            </div>
-            
-            <div class="clock">
-                <h1>Eating plan</h1>
-            </div>
-    
-        </div>
-    
-    </body>
-</html>
+{% extends 'base.html' %}
+
+{% block head_content %}
+<meta http-equiv="refresh" content="1800" />
+{% endblock %}
+
+{% block title_content %}
+<h1>Eating plan</h1>
+{% endblock %}
+
+{% block main_content %}
+Eating planning tools comes here
+{% endblock %}
+
+
