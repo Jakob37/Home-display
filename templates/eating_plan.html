@@ -9,7 +9,40 @@
 {% endblock %}
 
 {% block main_content %}
-Eating planning tools comes here
+
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            {% for week, meals in weeks.items() %}
+                <div class="mb-3">
+                    <h3>{{ week }}</h3>
+                    <div class="row g-2">
+                        {% for day, meal in meals.items() %}
+                            <div class="col-md-6">
+                                <label for="{{ week }}-{{ day }}" class="form-label">{{ day }}</label>
+                                <select id="{{ week }}-{{ day }}" class="form-select">
+                                    {% for food in available_foods %}
+                                        <option value="{{ food }}">{{ food }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-4">
+            <h3>Available Foods</h3>
+            <ul class="list-group">
+                {% for food in available_foods %}
+                    <li class="list-group-item">{{ food }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 

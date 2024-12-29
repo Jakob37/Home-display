@@ -83,10 +83,34 @@ def hello_user():
 
 @app.route("/eating")
 def eating_page():
-    data = {
-        "title": "Eating"
+
+    weeks = {
+        'Week 1': {
+            'Monday': 'Pizza',
+            'Tuesday': 'Salad',
+            'Wednesday': 'Pasta',
+            'Thursday': 'Fish',
+            'Friday': 'Steak',
+            'Saturday': 'Soup',
+            'Sunday': 'Sushi'
+        },
+        'Week 2': {
+            'Monday': 'Curry',
+            'Tuesday': 'Burger',
+            'Wednesday': 'Tacos',
+            'Thursday': 'Ramen',
+            'Friday': 'Chicken',
+            'Saturday': 'BBQ',
+            'Sunday': 'Paella'
+        }
     }
-    return render_template("eating_plan.html", **data)
+    available_foods = ['Pizza', 'Salad', 'Pasta', 'Fish', 'Steak', 'Soup', 'Sushi', 'Curry', 'Burger', 'Tacos', 'Ramen', 'Chicken', 'BBQ', 'Paella']
+
+    # data = {
+    #     "weeks": weeks,
+    #     "available_foods": available_foods
+    # }
+    return render_template("eating_plan.html", weeks=weeks, available_foods=available_foods)
 
 
 if __name__ == "__main__":
