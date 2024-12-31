@@ -4,7 +4,7 @@
 <h1>Eating plan</h1>
 {% endblock %} {% macro render_week(week, meals, available_foods, food_types) %}
 
-<div class="mb-3 col-md-6">
+<div class="mb-3 col-md-4">
   <h4>{{week}}</h4>
   <div>
     {% for day, meal in meals.items() %}
@@ -33,21 +33,30 @@
 
 <div class="container mt-4">
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
       <div class="row">
         {% for week, meals in weeks.items() %} {{ render_week(week, meals,
         available_foods, food_types) }} {% endfor %}
       </div>
     </div>
-    <div class="col-md-4">
+    <!-- <div class="col-md-4">
       <h3>Available Foods</h3>
       <ul class="list-group">
         {% for food in available_foods %}
         <li class="list-group-item">{{ food }}</li>
         {% endfor %}
       </ul>
-    </div>
+    </div> -->
   </div>
+</div>
+
+<div>
+    {% for category, foods in available_foods_grouped.items() %}
+    <p>{{category}}</p>
+        {% for food in foods %}
+        <p>-> {{food}}</p>
+        {% endfor %}
+    {% endfor %}
 </div>
 
 {% endblock %}

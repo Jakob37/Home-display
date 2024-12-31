@@ -158,11 +158,16 @@ def eating_page():
     available_foods = ['Pizza', 'Salad', 'Pasta', 'Fish', 'Steak', 'Soup', 'Sushi', 'Curry', 'Burger', 'Tacos', 'Ramen', 'Chicken', 'BBQ', 'Paella']
     food_types = ["Fish", "Egg", "Tofu", "Chicken", "Beef", "Ham"]
 
+    available_foods_grouped = {
+        "Fisk": ["Fiskpinnar", "Flundra"],
+        "Ägg": ["Omelett", "Pannkakor"]
+    }
+
     # data = {
     #     "weeks": weeks,
     #     "available_foods": available_foods
     # }
-    return render_template("eating_plan.html", weeks=weeks, available_foods=available_foods, food_types=food_types)
+    return render_template("eating_plan.html", weeks=weeks, available_foods=available_foods, food_types=food_types, available_foods_grouped=available_foods_grouped)
 
 
 if __name__ == "__main__":
