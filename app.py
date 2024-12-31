@@ -17,6 +17,17 @@ cache['clock_seconds'] = False
 USE_LOCAL = True
 DEBUG_MODE = True
 
+def get_weather_icons(temperature: int) -> str:
+    weather_icons = []
+    if temperature <= 0:
+        "fa-snowflake"
+    if temperature <= 7:
+        "fa-mitten"
+    if temperature <= 12:
+        "fa-hat-wizard"
+    return weather_icons
+
+
 @app.route("/")
 def index():
     title = "Home display"
@@ -40,13 +51,15 @@ def index():
         pollen = get_pollen(config['pollen']['city'])
     print(f"pollen {pollen}")
 
+    
     data = {
         "use_local": USE_LOCAL,
         "title": title,
         "my_clock": my_clock,
         "my_date": my_date,
         "lund_temperature": lund_temperature,
-        "pollen": pollen
+        "pollen": pollen,
+        "weather_icons": weather_icons
     }
 
     # data = {

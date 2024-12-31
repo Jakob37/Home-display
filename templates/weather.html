@@ -28,12 +28,14 @@
     &#9733;&#9733;&#9733;&#9733;&#9733;
 </div> -->
 
-<div style="font-size: 48px; text-align: center; color: black;">
-    <i class="fas fa-mitten" title="Gloves"></i> <!-- Gloves icon -->
-	<i class="fas fa-hat-wizard" title="Winter Hat"></i> <!-- Alternative for Winter hat -->
-    <i class="fas fa-glasses" title="Sunglasses"></i> 
-	<i class="fas fa-snowflake" title="Snowflake"></i>
+{% if weather_icons|length > 0 %}
+<div style="font-size: 60px; text-align: center; color: steelblue;">
+	{% for weather_icon in weather_icons %}
+    <i class="fas {{weather_icon}}" title="Gloves"></i>
+	{% endfor %}
 </div>
+{% endif %}
+
 
 <div>
 	{% for key, value in pollen.items() %}
