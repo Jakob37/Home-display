@@ -2,30 +2,76 @@
 <meta http-equiv="refresh" content="1800" />
 {% endblock %} {% block title_content %}
 <h1>Eating plan</h1>
-{% endblock %} {% macro render_week(week, meals, available_foods, food_types) %}
+{% endblock %} 
 
-<div class="mb-3 col-md-4">
-  <h4>{{week}}</h4>
-  <div>
-    {% for day, meal in meals.items() %}
-    <div class="mb-1 row">
-      <div class="col-md-4">
+{% macro render_week(week, meals, available_foods, food_types, available_foods_grouped) %}
+
+{% set days = ["M", "T", "W", "T", "F", "S"] %}
+
+<script>
+  function updateFoodOptions(week, day) {
+      const selectedFoodType = document.getElementById(week + '-' + day + '-foodtype-plan').value;
+      const foodSelect = document.getElementById(week + '-' + day + '-food-plan');
+      foodSelect.innerHTML = '';
+
+      console.log("JS hello")
+  
+      // const foods = {{ available_foods_grouped | tojson }};
+      // if (foods[selectedFoodType]) {
+      //     foods[selectedFoodType].forEach(function(food) {
+      //         var option = new Option(food, food);
+      //         foodSelect.options.add(option);
+      //     });
+      // }
+  };
+  </script>
+
+<div class="mb-3 row">
+  <div class="col-md-1">
+    <h4>Plan</h4>
+  </div>
+  <div class="col-md-11">
+    <div class="row">
+      {% for day in days %}
+      <div class="col-md-2">
+        <select id="{{ week }}-{{ day }}-foodtype-plan" class="form-select" onchange="updateFoodOptions('{{ week }}', '{{ day }}')">
+          {% for food_type in available_foods_grouped %}
+          <option value="{{ food_type }}">{{ food_type }}</option>
+          {% endfor %}
+        </select>
+        <select id="{{ week }}-{{ day }}-food-plan" class="form-select">
+          {% for food in available_foods_grouped %}
+          <option value="{{ food }}">{{ food }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="mb-3 row">
+  <div class="col-md-1">
+    <h4>{{week}}</h4>
+  </div>
+  <div class="col-md-11">
+    <div class="row">
+      {% for day, meal in meals.items() %}
+      <div class="col-md-2">
         <select id="{{ week }}-{{ day }}-foodtype" class="form-select">
           {% for food_type in food_types %}
           <option value="{{ food_type }}">{{ food_type }}</option>
           {% endfor %}
         </select>
-      </div>
-      <!-- <label for="{{ week }}-{{ day }}" class="form-label">{{ day }}</label> -->
-      <div class="col-md-8">
+        <!-- <label for="{{ week }}-{{ day }}" class="form-label">{{ day }}</label> -->
         <select id="{{ week }}-{{ day }}-food" class="form-select">
           {% for food in available_foods %}
           <option value="{{ food }}">{{ food }}</option>
           {% endfor %}
         </select>
       </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
 </div>
 
@@ -36,7 +82,7 @@
     <div class="col-md-12">
       <div class="row">
         {% for week, meals in weeks.items() %} {{ render_week(week, meals,
-        available_foods, food_types) }} {% endfor %}
+        available_foods, food_types, available_foods_grouped) }} {% endfor %}
       </div>
     </div>
     <!-- <div class="col-md-4">
@@ -50,13 +96,12 @@
   </div>
 </div>
 
-<div>
-    {% for category, foods in available_foods_grouped.items() %}
-    <p>{{category}}</p>
-        {% for food in foods %}
-        <p>-> {{food}}</p>
-        {% endfor %}
-    {% endfor %}
-</div>
+<!-- <div>
+  {% for category, foods in available_foods_grouped.items() %}
+  <p>{{category}}</p>
+  {% for food in foods %}
+  <p>-> {{food}}</p>
+  {% endfor %} {% endfor %}
+</div> -->
 
 {% endblock %}
