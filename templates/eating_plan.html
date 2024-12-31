@@ -4,7 +4,7 @@
 <h1>Eating plan</h1>
 {% endblock %} 
 
-{% macro render_week(week, meals, available_foods, food_types, available_foods_grouped) %}
+{% macro render_planning(available_foods_grouped) %}
 
 {% set days = ["M", "T", "W", "T", "F", "S"] %}
 
@@ -50,6 +50,12 @@
   </div>
 </div>
 
+
+{% endmacro %}
+
+{% macro render_week(week, meals, available_foods, food_types, available_foods_grouped) %}
+
+
 <div class="mb-3 row">
   <div class="col-md-1">
     <h4>{{week}}</h4>
@@ -58,17 +64,18 @@
     <div class="row">
       {% for day, meal in meals.items() %}
       <div class="col-md-2">
-        <select id="{{ week }}-{{ day }}-foodtype" class="form-select">
+        <p>{{meal}}</p>
+        <!-- <select id="{{ week }}-{{ day }}-foodtype" class="form-select">
           {% for food_type in food_types %}
           <option value="{{ food_type }}">{{ food_type }}</option>
           {% endfor %}
-        </select>
+        </select> -->
         <!-- <label for="{{ week }}-{{ day }}" class="form-label">{{ day }}</label> -->
-        <select id="{{ week }}-{{ day }}-food" class="form-select">
+        <!-- <select id="{{ week }}-{{ day }}-food" class="form-select">
           {% for food in available_foods %}
           <option value="{{ food }}">{{ food }}</option>
           {% endfor %}
-        </select>
+        </select> -->
       </div>
       {% endfor %}
     </div>
@@ -78,8 +85,9 @@
 {% endmacro %} {% block main_content %}
 
 <div class="container mt-4">
+  {{ render_planning(available_foods_grouped) }}
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12"
       <div class="row">
         {% for week, meals in weeks.items() %} {{ render_week(week, meals,
         available_foods, food_types, available_foods_grouped) }} {% endfor %}
