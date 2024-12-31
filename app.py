@@ -16,15 +16,43 @@ cache['clock_seconds'] = False
 
 USE_LOCAL = True
 DEBUG_MODE = True
+DEBUG_TEMP = 3
+
+class WeatherIcon:
+    def __init__(self, icon: str, color: str):
+        self.icon = icon
+        self.color = color
 
 def get_weather_icons(temperature: int) -> str:
+
+    blue = "steelblue"
+
+    deepblue = "blue"
+    lightblue = "lightblue"
+    yellow = "yellow"
+    orange = "orange"
+    red = "red"
+
     weather_icons = []
     if temperature <= 0:
-        "fa-snowflake"
+        weather_icons.append(WeatherIcon("fa-snowflake", blue))
     if temperature <= 7:
-        "fa-mitten"
+        weather_icons.append(WeatherIcon("fa-mitten", blue))
+        weather_icons.append(WeatherIcon("fa-mitten", blue))
     if temperature <= 12:
-        "fa-hat-wizard"
+        weather_icons.append(WeatherIcon("fa-hat-wizard", blue))
+
+    if temperature <= 0:
+        weather_icons.append(WeatherIcon("fa-temperature-empty", deepblue))
+    elif temperature <= 7:
+        weather_icons.append(WeatherIcon("fa-temperature-low", lightblue))
+    elif temperature <= 12:
+        weather_icons.append(WeatherIcon("fa-temperature-half", yellow))
+    elif temperature <= 20:
+        weather_icons.append(WeatherIcon("fa-temperature-full", orange))
+    else:
+        weather_icons.append(WeatherIcon("fa-temperature-high", red))
+
     return weather_icons
 
 
@@ -40,7 +68,7 @@ def index():
     lund_long = config['weather']['long']
 
     if USE_LOCAL:
-        lund_temperature = -37
+        lund_temperature = DEBUG_TEMP
     else:
         lund_temperature = round(get_temperature(lund_lat, lund_long))
 
@@ -51,6 +79,7 @@ def index():
         pollen = get_pollen(config['pollen']['city'])
     print(f"pollen {pollen}")
 
+    weather_icons = get_weather_icons(lund_temperature)
     
     data = {
         "use_local": USE_LOCAL,

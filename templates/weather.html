@@ -29,9 +29,9 @@
 </div> -->
 
 {% if weather_icons|length > 0 %}
-<div style="font-size: 60px; text-align: center; color: steelblue;">
+<div style="font-size: 60px; text-align: center;">
 	{% for weather_icon in weather_icons %}
-    <i class="fas {{weather_icon}}" title="Gloves"></i>
+    <i style="color: {{ weather_icon.color }};" class="fas {{ weather_icon.icon }}"></i>
 	{% endfor %}
 </div>
 {% endif %}
