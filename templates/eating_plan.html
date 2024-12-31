@@ -1,57 +1,53 @@
-{% extends 'base.html' %}
-
-{% block head_content %}
+{% extends 'base.html' %} {% block head_content %}
 <meta http-equiv="refresh" content="1800" />
-{% endblock %}
-
-{% block title_content %}
+{% endblock %} {% block title_content %}
 <h1>Eating plan</h1>
-{% endblock %}
+{% endblock %} {% macro render_week(week, meals, available_foods, food_types) %}
 
-{% macro render_week(week, meals, available_foods) %}
-
-<div class="mb-3 col-md-3">
-    <h4>{{week}}</h4>
-    <div>
-        {% for day, meal in meals.items() %}
-        <div class="mb-1">
-            <!-- <label for="{{ week }}-{{ day }}" class="form-label">{{ day }}</label> -->
-            <select id="{{ week }}-{{ day }}" class="form-select">
-                {% for food in available_foods %}
-                    <option value="{{ food }}">{{ food }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        {% endfor %}
+<div class="mb-3 col-md-6">
+  <h4>{{week}}</h4>
+  <div>
+    {% for day, meal in meals.items() %}
+    <div class="mb-1 row">
+      <div class="col-md-4">
+        <select id="{{ week }}-{{ day }}-foodtype" class="form-select">
+          {% for food_type in food_types %}
+          <option value="{{ food_type }}">{{ food_type }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <!-- <label for="{{ week }}-{{ day }}" class="form-label">{{ day }}</label> -->
+      <div class="col-md-8">
+        <select id="{{ week }}-{{ day }}-food" class="form-select">
+          {% for food in available_foods %}
+          <option value="{{ food }}">{{ food }}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
-
+    {% endfor %}
+  </div>
 </div>
 
-{% endmacro %}
-
-{% block main_content %}
-
+{% endmacro %} {% block main_content %}
 
 <div class="container mt-4">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="row">
-                {% for week, meals in weeks.items() %}
-                    {{ render_week(week, meals, available_foods) }}
-                {% endfor %}
-            </div>
-        </div>
-        <div class="col-md-4">
-            <h3>Available Foods</h3>
-            <ul class="list-group">
-                {% for food in available_foods %}
-                    <li class="list-group-item">{{ food }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row">
+        {% for week, meals in weeks.items() %} {{ render_week(week, meals,
+        available_foods, food_types) }} {% endfor %}
+      </div>
     </div>
+    <div class="col-md-4">
+      <h3>Available Foods</h3>
+      <ul class="list-group">
+        {% for food in available_foods %}
+        <li class="list-group-item">{{ food }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </div>
 
 {% endblock %}
-
-
