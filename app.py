@@ -127,7 +127,7 @@ def hello_user():
 def eating_page():
 
     weeks = {
-        'Week 1': {
+        'Week 12': {
             'Monday': 'Pizza',
             'Tuesday': 'Salad',
             'Wednesday': 'Pasta',
@@ -136,14 +136,23 @@ def eating_page():
             'Saturday': 'Soup',
             'Sunday': 'Sushi'
         },
-        'Week 2': {
-            'Monday': 'Curry',
-            'Tuesday': 'Burger',
-            'Wednesday': 'Tacos',
-            'Thursday': 'Ramen',
-            'Friday': 'Chicken',
-            'Saturday': 'BBQ',
-            'Sunday': 'Paella'
+        'Week 13': {
+            'Monday': 'Pizza',
+            'Tuesday': 'Salad',
+            'Wednesday': 'Pasta',
+            'Thursday': 'Fish',
+            'Friday': 'Steak',
+            'Saturday': 'Soup',
+            'Sunday': 'Sushi'
+        },
+        'Week 14': {
+            'Monday': 'Pizza',
+            'Tuesday': 'Salad',
+            'Wednesday': 'Pasta',
+            'Thursday': 'Fish',
+            'Friday': 'Steak',
+            'Saturday': 'Soup',
+            'Sunday': 'Sushi'
         }
     }
     available_foods = ['Pizza', 'Salad', 'Pasta', 'Fish', 'Steak', 'Soup', 'Sushi', 'Curry', 'Burger', 'Tacos', 'Ramen', 'Chicken', 'BBQ', 'Paella']
