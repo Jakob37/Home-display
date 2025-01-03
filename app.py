@@ -16,7 +16,7 @@ cache['clock_seconds'] = False
 
 USE_LOCAL = True
 DEBUG_MODE = True
-DEBUG_TEMP = 3
+DEBUG_TEMP = -37
 
 class WeatherIcon:
     def __init__(self, icon: str, color: str):
@@ -157,7 +157,10 @@ def eating_page():
 
     available_foods_grouped = {
         "Fisk": ["Fiskpinnar", "Flundra"],
-        "Ägg": ["Omelett", "Pannkakor"]
+        "Ägg": ["Omelett", "Pannkakor"],
+        "Kött": ["Köttbullar", "Prinskorv"],
+        "Kyckling": ["Kyckling i ugn"],
+        "Tofu": ["Stekt med paprika"]
     }
 
     # data = {
