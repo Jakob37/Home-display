@@ -4,24 +4,27 @@ from flask import Flask, render_template, jsonify
 from src.weather_request import get_temperature
 from src.traffic import get_train_table_zip
 from src.pollen import get_pollen
+
 app = Flask(__name__)
 import datetime
 import configparser
 
 config = configparser.ConfigParser()
-config.read('app.config')
+config.read("app.config")
 
 cache = dict()
-cache['clock_seconds'] = False
+cache["clock_seconds"] = False
 
 USE_LOCAL = True
 DEBUG_MODE = True
 DEBUG_TEMP = -37
 
+
 class WeatherIcon:
     def __init__(self, icon: str, color: str):
         self.icon = icon
         self.color = color
+
 
 def get_weather_icons(temperature: int) -> str:
 
@@ -60,12 +63,12 @@ def get_weather_icons(temperature: int) -> str:
 def index():
     title = "Home display"
 
-    #get_train_table_zip()
+    # get_train_table_zip()
 
     my_clock = str(datetime.datetime.now().strftime("%H:%M"))
     my_date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
-    lund_lat = config['weather']['lat']
-    lund_long = config['weather']['long']
+    lund_lat = config["weather"]["lat"]
+    lund_long = config["weather"]["long"]
 
     if USE_LOCAL:
         lund_temperature = DEBUG_TEMP
@@ -76,11 +79,11 @@ def index():
         pollen = {}
         # pollen = {"Pollen 1": "A lot", "Pollen 2": "Not so much"}
     else:
-        pollen = get_pollen(config['pollen']['city'])
+        pollen = get_pollen(config["pollen"]["city"])
     print(f"pollen {pollen}")
 
     weather_icons = get_weather_icons(lund_temperature)
-    
+
     data = {
         "use_local": USE_LOCAL,
         "title": title,
@@ -88,7 +91,7 @@ def index():
         "my_date": my_date,
         "lund_temperature": lund_temperature,
         "pollen": pollen,
-        "weather_icons": weather_icons
+        "weather_icons": weather_icons,
     }
 
     # data = {
@@ -102,21 +105,24 @@ def index():
 
     return render_template("weather.html", **data)
 
+
 @app.route("/clock")
 def get_clock():
-    if cache['clock_seconds']:
+    if cache["clock_seconds"]:
         clock = str(datetime.datetime.now().strftime("%H:%M:%S"))
     else:
         clock = str(datetime.datetime.now().strftime("%H:%M"))
     return str(clock)
 
-@app.route("/toggleclock", methods=['POST'])
+
+@app.route("/toggleclock", methods=["POST"])
 def toggle_clock():
-    cache['clock_seconds'] = not cache['clock_seconds']
+    cache["clock_seconds"] = not cache["clock_seconds"]
     print(f"clock_seconds: {cache['clock_seconds']}")
     resp = jsonify(success=True)
     print(resp)
-    #return resp
+    # return resp
+
 
 @app.route("/user/")
 def hello_user():
@@ -127,49 +133,84 @@ def hello_user():
 def eating_page():
 
     weeks = {
-        '12': {
-            'Monday': 'Pizza',
-            'Tuesday': 'Salad',
-            'Wednesday': 'Pasta',
-            'Thursday': 'Fish',
-            'Friday': 'Steak',
-            'Saturday': 'Soup',
+        "12": {
+            "Monday": "Pizza",
+            "Tuesday": "Salad",
+            "Wednesday": "Pasta",
+            "Thursday": "Fish",
+            "Friday": "Steak",
         },
-        '13': {
-            'Monday': 'Pizza',
-            'Tuesday': 'Salad',
-            'Wednesday': 'Pasta',
-            'Thursday': 'Fish',
-            'Friday': 'Steak',
-            'Saturday': 'Soup',
+        "13": {
+            "Monday": "Pizza",
+            "Tuesday": "Salad",
+            "Wednesday": "Pasta",
+            "Thursday": "Fish",
+            "Friday": "Steak",
         },
-        '14': {
-            'Monday': 'Pizza',
-            'Tuesday': 'Salad',
-            'Wednesday': 'Pasta',
-            'Thursday': 'Fish',
-            'Friday': 'Steak',
-            'Saturday': 'Soup',
-        }
+        "14": {
+            "Monday": "Pizza",
+            "Tuesday": "Salad",
+            "Wednesday": "Pasta",
+            "Thursday": "Fish",
+            "Friday": "Steak",
+        },
     }
-    available_foods = ['Pizza', 'Salad', 'Pasta', 'Fish', 'Steak', 'Soup', 'Sushi', 'Curry', 'Burger', 'Tacos', 'Ramen', 'Chicken', 'BBQ', 'Paella']
-    food_types = ["Fish", "Egg", "Tofu", "Chicken", "Beef", "Ham"]
+    available_foods = [
+        "Pizza",
+        "Salad",
+        "Pasta",
+        "Fish",
+        "Steak",
+        "Soup",
+        "Sushi",
+        "Curry",
+        "Burger",
+        "Tacos",
+        "Ramen",
+        "Chicken",
+        "BBQ",
+        "Paella",
+    ]
+    food_types = ["Fisk", "Ägg", "Kött", "Kyckling", "Tofu"]
 
     available_foods_grouped = {
         "Fisk": ["Fiskpinnar", "Flundra"],
         "Ägg": ["Omelett", "Pannkakor"],
         "Kött": ["Köttbullar", "Prinskorv"],
         "Kyckling": ["Kyckling i ugn"],
-        "Tofu": ["Stekt med paprika"]
+        "Tofu": ["Stekt med paprika"],
+    }
+
+    selected_food_type_per_day = {
+        "Mo": "Fisk",
+        "Tu": "Fisk",
+        "We": "Fisk",
+        "Th": "Fisk",
+        "Fr": "Tofu",
+    }
+
+    selected_food_per_day = {
+        "Mo": "Fiskpinnar",
+        "Tu": "Fiskpinnar",
+        "We": "Fiskpinnar",
+        "Th": "Fiskpinnar",
+        "Fr": "Flundra",
     }
 
     # data = {
     #     "weeks": weeks,
     #     "available_foods": available_foods
     # }
-    return render_template("eating_plan.html", weeks=weeks, available_foods=available_foods, food_types=food_types, available_foods_grouped=available_foods_grouped)
+    return render_template(
+        "eating_plan.html",
+        weeks=weeks,
+        available_foods=available_foods,
+        food_types=food_types,
+        available_foods_grouped=available_foods_grouped,
+        selected_food_type_per_day=selected_food_type_per_day,
+        # selected_food_per_day=selected_food_per_day,
+    )
 
 
 if __name__ == "__main__":
     app.run(debug=DEBUG_MODE)
-
