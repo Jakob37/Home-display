@@ -15,9 +15,10 @@ config.read("app.config")
 cache = dict()
 cache["clock_seconds"] = False
 
-USE_LOCAL = False
-DEBUG_MODE = False
+USE_LOCAL = True
+DEBUG_MODE = True
 DEBUG_TEMP = 3
+
 
 class WeatherIcon:
     def __init__(self, icon: str, color: str):
@@ -56,6 +57,7 @@ def get_weather_icons(temperature: int) -> str:
         weather_icons.append(WeatherIcon("fa-temperature-high", red))
 
     return weather_icons
+
 
 @app.route("/")
 def index():
@@ -170,10 +172,10 @@ def eating_page():
         "BBQ",
         "Paella",
     ]
-    food_types = ["Fisk", "Ägg", "Kött", "Kyckling", "Tofu"]
+    # food_types = ["&#xf00c; Fisk!", "Ägg", "Kött", "Kyckling", "Tofu"]
 
     available_foods_grouped = {
-        "Fisk": ["Fiskpinnar", "Flundra"],
+        "Fisk &#xf00c; ": ["Fiskpinnar", "Flundra"],
         "Ägg": ["Omelett", "Pannkakor"],
         "Kött": ["Köttbullar", "Prinskorv"],
         "Kyckling": ["Kyckling i ugn"],
@@ -204,7 +206,6 @@ def eating_page():
         "eating_plan.html",
         weeks=weeks,
         available_foods=available_foods,
-        food_types=food_types,
         available_foods_grouped=available_foods_grouped,
         selected_food_type_per_day=selected_food_type_per_day,
         # selected_food_per_day=selected_food_per_day,
