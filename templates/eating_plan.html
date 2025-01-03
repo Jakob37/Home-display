@@ -2,34 +2,33 @@
 <meta http-equiv="refresh" content="1800" />
 {% endblock %} {% block title_content %}
 <h1>Eating plan</h1>
-{% endblock %} 
+{% endblock %}
 
 
 {% macro render_select(week, day, available_foods_grouped, selected_food_type) %}
-<div class="col-md-2">
-  <select id="{{ week }}-{{ day }}-foodtype-plan" class="form-select">
-    {% for food_type in available_foods_grouped %}
+<div class="mb-2">
+  <div class="mb-1">
+    <select id="{{ week }}-{{ day }}-foodtype-plan" class="form-select">
+      {% for food_type in available_foods_grouped %}
       {% if food_type == selected_food_type %}
-        <option value="{{ food_type }}" selected>{{ food_type }}</option>
+      <option value="{{ food_type }}" selected>{{ food_type }}</option>
       {% else %}
-        <option value="{{ food_type }}">{{ food_type }}</option>
+      <option value="{{ food_type }}">{{ food_type }}</option>
       {% endif %}
-    {% endfor %}
-  </select>
-  <!-- {{selected_food_type}} -->
-  <!-- {{available_foods_grouped}} -->
-  {% for food in available_foods_grouped[selected_food_type] %}
-    <!-- {{food}} -->
-  {% endfor %}
-  <select id="{{ week }}-{{ day }}-food-plan" class="form-select">
-    {% for food in available_foods_grouped[selected_food_type] %}
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <select id="{{ week }}-{{ day }}-food-plan" class="form-select">
+      {% for food in available_foods_grouped[selected_food_type] %}
       {% if food == selected_food %}
-        <option value="{{ food }}" selected>{{ food }}</option>
+      <option value="{{ food }}" selected>{{ food }}</option>
       {% else %}
-        <option value="{{ food }}">{{ food }}</option>
+      <option value="{{ food }}">{{ food }}</option>
       {% endif %}
-    {% endfor %}
-  </select>
+      {% endfor %}
+    </select>
+  </div>
 </div>
 {% endmacro %}
 
@@ -38,17 +37,11 @@
 
 {% set days = ["Mo", "Tu", "We", "Th", "Fr"] %}
 
-<div class="mb-3 row">
-  <div class="col-md-1">
-    <h4>Plan</h4>
-  </div>
-  <div class="col-md-11">
-    <div class="row">
-      {% for day in days %}
-      {{render_select(week, day, available_foods_grouped, selected_food_type_per_day[day])}}
-      {% endfor %}
-    </div>
-  </div>
+<div class="mb-3 col-md-4">
+  <h4>Plan</h4>
+  {% for day in days %}
+  {{render_select(week, day, available_foods_grouped, selected_food_type_per_day[day])}}
+  {% endfor %}
 </div>
 
 
@@ -57,14 +50,14 @@
 {% macro render_week(week, meals, available_foods, food_types, available_foods_grouped) %}
 
 
-<div class="mb-3 row">
-  <div class="col-md-1">
-    <h4>{{week}}</h4>
-  </div>
-  <div class="col-md-11">
-    <div class="row">
+<div class="mb-3 col-md-2">
+  <div class="row">
+    <div class="col-md-3">
+      <h4>{{week}}</h4>
+    </div>
+    <div class="col-md-3">
       {% for day, meal in meals.items() %}
-      <div class="col-md-2">
+      <div class="row">
         <p>{{meal}}</p>
       </div>
       {% endfor %}
@@ -74,15 +67,12 @@
 
 {% endmacro %} {% block main_content %}
 
-<div class="container mt-4">
-  {{ render_planning(available_foods_grouped, selected_food_type_per_day) }}
+<div class="container mt-2">
   <div class="row">
-    <div class="col-md-12"
-      <div class="row">
-        {% for week, meals in weeks.items() %} {{ render_week(week, meals,
-        available_foods, food_types, available_foods_grouped) }} {% endfor %}
-      </div>
-    </div>
+    {{ render_planning(available_foods_grouped, selected_food_type_per_day) }}
+    {% for week, meals in weeks.items() %}
+    {{ render_week(week, meals, available_foods, food_types, available_foods_grouped) }}
+    {% endfor %}
   </div>
 </div>
 
@@ -91,13 +81,5 @@
     Food category overview goes here
   </div>
 </div>
-
-<!-- <div>
-  {% for category, foods in available_foods_grouped.items() %}
-  <p>{{category}}</p>
-  {% for food in foods %}
-  <p>-> {{food}}</p>
-  {% endfor %} {% endfor %}
-</div> -->
 
 {% endblock %}
