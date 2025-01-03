@@ -18,9 +18,9 @@
 {% block main_content %}
 <div id="smhi">
 	{% if use_local %}
-		<img src="{{ url_for('static', filename='assets/meteogram.svg')}}" alt="Local SVG" width="100%" height="auto">
+	<img src="{{ url_for('static', filename='assets/meteogram.svg')}}" alt="Local SVG" width="100%" height="auto">
 	{% else %}
-		<img src="https://www.yr.no/en/content/2-2693678/meteogram.svg" alt="YR" width="100%" height="auto">
+	<img src="https://www.yr.no/en/content/2-2693678/meteogram.svg" alt="YR" width="100%" height="auto">
 	{% endif %}
 </div>
 
@@ -28,20 +28,28 @@
     &#9733;&#9733;&#9733;&#9733;&#9733;
 </div> -->
 
-{% if weather_icons|length > 0 %}
-<div style="font-size: 90px; text-align: center;">
-	{% for weather_icon in weather_icons %}
-    <i style="color: {{ weather_icon.color }};" class="fas {{ weather_icon.icon }}"></i>
-	{% endfor %}
+<div class="row">
+	{% if display_text|length > 0 %}
+	<div class="col-md-3">
+		{% for text_piece in display_text %}
+		<div class="row ms-2" style="font-size: 30px;">{{text_piece}}</div>
+		{% endfor %}
+	</div>
+	{% endif %}
+	{% if weather_icons|length > 0 %}
+	<div style="font-size: 90px; text-align: center;" class="col-md-9">
+		{% for weather_icon in weather_icons %}
+		<i style="color: {{ weather_icon.color }};" class="fas {{ weather_icon.icon }}"></i>
+		{% endfor %}
+	</div>
+	{% endif %}
 </div>
-{% endif %}
+
 
 
 <div>
 	{% for key, value in pollen.items() %}
-		<div style="font-size: 30px">{{key}}: {{value}}</div>
+	<div style="font-size: 30px">{{key}}: {{value}}</div>
 	{% endfor %}
 </div>
 {% endblock %}
-
-

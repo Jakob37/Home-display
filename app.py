@@ -92,6 +92,7 @@ def index():
         "lund_temperature": lund_temperature,
         "pollen": pollen,
         "weather_icons": weather_icons,
+        "display_text": ["ALVAR", "PAPPA", "MAMMA"],
     }
 
     # data = {
