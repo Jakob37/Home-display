@@ -15,10 +15,9 @@ config.read("app.config")
 cache = dict()
 cache["clock_seconds"] = False
 
-USE_LOCAL = True
-DEBUG_MODE = True
-DEBUG_TEMP = -37
-
+USE_LOCAL = False
+DEBUG_MODE = False
+DEBUG_TEMP = 3
 
 class WeatherIcon:
     def __init__(self, icon: str, color: str):
@@ -57,7 +56,6 @@ def get_weather_icons(temperature: int) -> str:
         weather_icons.append(WeatherIcon("fa-temperature-high", red))
 
     return weather_icons
-
 
 @app.route("/")
 def index():
