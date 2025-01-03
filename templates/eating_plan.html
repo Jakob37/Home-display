@@ -51,17 +51,15 @@
 
 
 <div class="mb-3 col-md-2">
-  <div class="row">
-    <div class="col-md-3">
-      <h4>{{week}}</h4>
+  <div class="col-md-3">
+    <h4>v{{week}}</h4>
+  </div>
+  <div>
+    {% for day, meal in meals.items() %}
+    <div>
+      <p>{{meal}}</p>
     </div>
-    <div class="col-md-3">
-      {% for day, meal in meals.items() %}
-      <div class="row">
-        <p>{{meal}}</p>
-      </div>
-      {% endfor %}
-    </div>
+    {% endfor %}
   </div>
 </div>
 
