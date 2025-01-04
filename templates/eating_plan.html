@@ -26,7 +26,8 @@
 
 <div class="row">
   <div class="col-md-3">
-    <select name="{{ day }}-foodtype-plan" class="form-select" style='height: 45px; font-family:Arial;'>
+    <select name="{{ day }}-foodtype-plan" class="form-select"
+      style='height: 60px; font-family:Arial; font-size: 30px;'>
       {% for food_type in available_foods_grouped %}
       {% if food_type == selected_food_type %}
       <option value="{{ food_type }}" selected>{{food_icon(food_type)}}</option>
@@ -37,7 +38,7 @@
     </select>
   </div>
   <div class="col-md-9">
-    <select name="{{ day }}-food-plan" class="form-select">
+    <select name="{{ day }}-food-plan" class="form-select" style="font-size: 30px;">
       {% for food in available_foods_grouped[selected_food_type] %}
       {% if food == selected_food %}
       <option value="{{ food }}" selected>{{ food }}</option>
@@ -55,7 +56,7 @@
 
 {% set days = ["Mo", "Tu", "We", "Th", "Fr"] %}
 
-<div class="mb-3 col-md-5">
+<div class="mb-3 col-md-8">
   <form action="/eating" method="POST">
     <div class="row justify-content-between">
       <div class="col-md-2">
