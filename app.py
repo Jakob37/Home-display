@@ -175,7 +175,7 @@ def eating_page():
     # food_types = ["&#xf00c; Fisk!", "Ägg", "Kött", "Kyckling", "Tofu"]
 
     available_foods_grouped = {
-        "Fisk &#xf00c; ": ["Fiskpinnar", "Flundra"],
+        "Fisk": ["Fiskpinnar", "Flundra"],
         "Ägg": ["Omelett", "Pannkakor"],
         "Kött": ["Köttbullar", "Prinskorv"],
         "Kyckling": ["Kyckling i ugn"],
@@ -184,9 +184,9 @@ def eating_page():
 
     selected_food_type_per_day = {
         "Mo": "Fisk",
-        "Tu": "Fisk",
-        "We": "Fisk",
-        "Th": "Fisk",
+        "Tu": "Ägg",
+        "We": "Kött",
+        "Th": "Kyckling",
         "Fr": "Tofu",
     }
 
