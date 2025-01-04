@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from flask import Flask, redirect, render_template, jsonify, request, url_for
-from src.db.db import save_selections
+from src.db.db import load_selections, save_selections
 from src.weather_request import get_temperature
 from src.traffic import get_train_table_zip
 from src.pollen import get_pollen
@@ -134,20 +134,45 @@ def hello_user():
 @app.route("/eating", methods=["GET", "POST"])
 def eating_page():
 
-    selected_food_type_per_day = {
-        "Mo": "Fisk",
-        "Tu": "Ägg",
-        "We": "Kött",
-        "Th": "Kyckling",
-        "Fr": "Tofu",
-    }
+    DAYS = ["Mo", "Tu", "We", "Th", "Fr"]
+
+    food_selections = load_selections()
+    for day in DAYS:
+        type_id = f"{day}-foodtype-plan"
+        foodtype = food_selections.get(type_id)
+        if not foodtype:
+            food_selections[type_id] = foodtype
+
+        food_id = f"{day}-food-plan"
+        food = food_selections.get(food_id)
+        if not food:
+            food_selections[food_id] = food
+
+    print(food_selections)
+
+    # selected_food_type_per_day = {
+    #     "Mo": "Fisk",
+    #     "Tu": "Ägg",
+    #     "We": "Kött",
+    #     "Th": "Kyckling",
+    #     "Fr": "Tofu",
+    # }
 
     if request.method == "POST":
-        print("Hello from request!")
+
+        food_selects = {}
+        for day in DAYS:
+            foodtype = request.form.get(f"{day}-foodtype-plan") or ""
+            food = request.form.get(f"{day}-food-plan") or ""
+
+            print(f"Food type: {foodtype} food: {food}")
+            food_selects[food] = food
+            food_selects[foodtype] = foodtype
+
         # day = request.form["day"]
         # selected_food = request.form["selected_food"]
         # selected_food_type_per_day[day] = selected_food
-        # save_selections(selected_food_type_per_day)
+        save_selections(food_selects)
         return redirect(url_for("eating_page"))
 
     weeks = {
@@ -216,7 +241,7 @@ def eating_page():
         weeks=weeks,
         available_foods=available_foods,
         available_foods_grouped=available_foods_grouped,
-        selected_food_type_per_day=selected_food_type_per_day,
+        selected_food_type_per_day=food_selections,
         # selected_food_per_day=selected_food_per_day,
     )
 
