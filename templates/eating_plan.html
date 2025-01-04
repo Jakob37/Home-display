@@ -24,19 +24,19 @@
 
 {% macro render_select(week, day, available_foods_grouped, selected_food_type) %}
 
-<div class="mb-2">
-  <div class="mb-1">
+<div class="row">
+  <div class="col-md-3">
     <select id="{{ week }}-{{ day }}-foodtype-plan" class="form-select" style='height: 45px; font-family:Arial;'>
       {% for food_type in available_foods_grouped %}
       {% if food_type == selected_food_type %}
       <option value="{{ food_type }}" selected>{{food_icon(food_type)}}</option>
       {% else %}
-      <option value="{{ food_type }}">{{food_icon(food_type)}}{{ food_type }}</option>
+      <option value="{{ food_type }}">{{food_icon(food_type)}}</option>
       {% endif %}
       {% endfor %}
     </select>
   </div>
-  <div>
+  <div class="col-md-9">
     <select id="{{ week }}-{{ day }}-food-plan" class="form-select">
       {% for food in available_foods_grouped[selected_food_type] %}
       {% if food == selected_food %}
@@ -55,7 +55,7 @@
 
 {% set days = ["Mo", "Tu", "We", "Th", "Fr"] %}
 
-<div class="mb-3 col-md-4">
+<div class="mb-3 col-md-5">
   <h4>Plan</h4>
   {% for day in days %}
   {{render_select(week, day, available_foods_grouped, selected_food_type_per_day[day])}}
@@ -93,19 +93,6 @@
     {% endfor %}
   </div>
 </div>
-
-<select>
-  <option value="test">Test</option>
-</select>
-
-
-<select name='state' style='height: 45px; font-family:Arial, FontAwesome;'>
-  <option value=''>&#xf039; &nbsp; All States</option>
-  <option value='enabled' style='color:green;'>&#xf00c; &nbsp; Enabled</option>
-  <option value='paused' style='color:orange;'>&#xf04c; &nbsp; Paused</option>
-  <option value='archived' style='color:red;'>&#xf023; &nbsp; Archived</option>
-</select>
-
 
 <div class="container mt-4">
   <div>
