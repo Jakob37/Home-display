@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template, jsonify
+from flask import Flask, redirect, render_template, jsonify, request, url_for
+from src.db.db import save_selections
 from src.weather_request import get_temperature
 from src.traffic import get_train_table_zip
 from src.pollen import get_pollen
@@ -130,8 +131,23 @@ def hello_user():
     users = ["Xuan", "Jakob", "Alvar"]
 
 
-@app.route("/eating")
+@app.route("/eating", methods=["GET", "POST"])
 def eating_page():
+
+    selected_food_type_per_day = {
+        "Mo": "Fisk",
+        "Tu": "Ägg",
+        "We": "Kött",
+        "Th": "Kyckling",
+        "Fr": "Tofu",
+    }
+
+    if request.method == "POST":
+        day = request.form["day"]
+        selected_food = request.form["selected_food"]
+        selected_food_type_per_day[day] = selected_food
+        save_selections(selected_food_type_per_day)
+        return redirect(url_for("home"))
 
     weeks = {
         "12": {
@@ -180,14 +196,6 @@ def eating_page():
         "Kött": ["Köttbullar", "Prinskorv"],
         "Kyckling": ["Kyckling i ugn"],
         "Tofu": ["Stekt med paprika"],
-    }
-
-    selected_food_type_per_day = {
-        "Mo": "Fisk",
-        "Tu": "Ägg",
-        "We": "Kött",
-        "Th": "Kyckling",
-        "Fr": "Tofu",
     }
 
     selected_food_per_day = {

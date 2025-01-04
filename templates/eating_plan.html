@@ -56,7 +56,14 @@
 {% set days = ["Mo", "Tu", "We", "Th", "Fr"] %}
 
 <div class="mb-3 col-md-5">
-  <h4>Plan</h4>
+  <div class="row justify-content-between">
+    <div class="col-md-2">
+      <h4>Plan</h4>
+    </div>
+    <div class="col-md-2">
+      <button type="submit">Save</button>
+    </div>
+  </div>
   {% for day in days %}
   {{render_select(week, day, available_foods_grouped, selected_food_type_per_day[day])}}
   {% endfor %}
@@ -94,7 +101,7 @@
   </div>
 </div>
 
-<div class="container mt-4">
+<div class="container mt-2">
   <div>
     Food category overview goes here
   </div>
