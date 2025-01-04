@@ -56,17 +56,19 @@
 {% set days = ["Mo", "Tu", "We", "Th", "Fr"] %}
 
 <div class="mb-3 col-md-5">
-  <div class="row justify-content-between">
-    <div class="col-md-2">
-      <h4>Plan</h4>
+  <form action="/eating" method="POST">
+    <div class="row justify-content-between">
+      <div class="col-md-2">
+        <h4>Plan</h4>
+      </div>
+      <div class="col-md-2">
+        <button type="submit">Save</button>
+      </div>
     </div>
-    <div class="col-md-2">
-      <button type="submit">Save</button>
-    </div>
-  </div>
-  {% for day in days %}
-  {{render_select(week, day, available_foods_grouped, selected_food_type_per_day[day])}}
-  {% endfor %}
+    {% for day in days %}
+    {{render_select(week, day, available_foods_grouped, selected_food_type_per_day[day])}}
+    {% endfor %}
+  </form>
 </div>
 
 

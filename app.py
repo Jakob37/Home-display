@@ -143,11 +143,12 @@ def eating_page():
     }
 
     if request.method == "POST":
-        day = request.form["day"]
-        selected_food = request.form["selected_food"]
-        selected_food_type_per_day[day] = selected_food
-        save_selections(selected_food_type_per_day)
-        return redirect(url_for("home"))
+        print("Hello from request!")
+        # day = request.form["day"]
+        # selected_food = request.form["selected_food"]
+        # selected_food_type_per_day[day] = selected_food
+        # save_selections(selected_food_type_per_day)
+        return redirect(url_for("eating_page"))
 
     weeks = {
         "12": {
