@@ -22,7 +22,7 @@
 {% endif %}
 {% endmacro %}
 
-{% macro render_select(week, day, available_foods_grouped, selected_food_type) %}
+{% macro render_select(week, day, available_foods_grouped, selected_food_type, selected_food) %}
 
 <div class="row">
   <div class="col-md-3">
@@ -51,7 +51,7 @@
 {% endmacro %}
 
 
-{% macro render_planning(available_foods_grouped, selected_food_type_per_day) %}
+{% macro render_planning(available_foods_grouped, food_selections) %}
 
 {% set days = ["Mo", "Tu", "We", "Th", "Fr"] %}
 
@@ -66,7 +66,7 @@
       </div>
     </div>
     {% for day in days %}
-    {{render_select(week, day, available_foods_grouped, selected_food_type_per_day[day])}}
+    {{render_select(week, day, available_foods_grouped, food_selections[day].type, food_selections[day].food)}}
     {% endfor %}
   </form>
 </div>
@@ -96,7 +96,7 @@
 
 <div class="container mt-2">
   <div class="row">
-    {{ render_planning(available_foods_grouped, selected_food_type_per_day) }}
+    {{ render_planning(available_foods_grouped, food_selections) }}
     {% for week, meals in weeks.items() %}
     {{ render_week(week, meals, available_foods, available_foods_grouped) }}
     {% endfor %}

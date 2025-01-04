@@ -137,37 +137,29 @@ def eating_page():
     DAYS = ["Mo", "Tu", "We", "Th", "Fr"]
 
     food_selections = load_selections()
-    for day in DAYS:
-        type_id = f"{day}-foodtype-plan"
-        foodtype = food_selections.get(type_id)
-        if not foodtype:
-            food_selections[type_id] = foodtype
-
-        food_id = f"{day}-food-plan"
-        food = food_selections.get(food_id)
-        if not food:
-            food_selections[food_id] = food
-
+    print("Loaded selections")
     print(food_selections)
-
-    # selected_food_type_per_day = {
-    #     "Mo": "Fisk",
-    #     "Tu": "Ägg",
-    #     "We": "Kött",
-    #     "Th": "Kyckling",
-    #     "Fr": "Tofu",
-    # }
+    for day in DAYS:
+        if not food_selections.get(day):
+            food_selections[day] = {
+                "type": "Placeholder type",
+                "food": "Placeholder food",
+            }
 
     if request.method == "POST":
 
         food_selects = {}
         for day in DAYS:
-            foodtype = request.form.get(f"{day}-foodtype-plan") or ""
-            food = request.form.get(f"{day}-food-plan") or ""
+            foodtype_id = f"{day}-foodtype-plan"
+            foodtype = request.form.get(foodtype_id) or "C"
+            food_id = f"{day}-food-plan"
+            food = request.form.get(food_id) or "D"
 
             print(f"Food type: {foodtype} food: {food}")
-            food_selects[food] = food
-            food_selects[foodtype] = foodtype
+            food_selects[day] = {"type": foodtype, "food": food}
+
+        print("Grabbed food_selects")
+        print(food_selects)
 
         # day = request.form["day"]
         # selected_food = request.form["selected_food"]
@@ -236,12 +228,15 @@ def eating_page():
     #     "weeks": weeks,
     #     "available_foods": available_foods
     # }
+
+    print(food_selections)
+
     return render_template(
         "eating_plan.html",
         weeks=weeks,
         available_foods=available_foods,
         available_foods_grouped=available_foods_grouped,
-        selected_food_type_per_day=food_selections,
+        food_selections=food_selections,
         # selected_food_per_day=selected_food_per_day,
     )
 
