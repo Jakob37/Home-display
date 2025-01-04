@@ -109,6 +109,17 @@
   </div>
 </div>
 
-
+<meta http-equiv="refresh" content="1800" />
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Select all dropdowns within the form
+    document.querySelectorAll('.form-select').forEach(select => {
+      select.addEventListener('change', () => {
+        // Trigger form submit on change
+        select.closest('form').submit();
+      });
+    });
+  });
+</script>
 
 {% endblock %}
