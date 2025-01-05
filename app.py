@@ -175,13 +175,13 @@ def eating_page():
             "Thursday": "Fish",
             "Friday": "Steak",
         },
-        # "13": {
-        #     "Monday": "Pizza",
-        #     "Tuesday": "Salad",
-        #     "Wednesday": "Pasta",
-        #     "Thursday": "Fish",
-        #     "Friday": "Steak",
-        # },
+        "13": {
+            "Monday": "Pizza",
+            "Tuesday": "Salad",
+            "Wednesday": "Pasta",
+            "Thursday": "Fish",
+            "Friday": "Steak",
+        },
         # "14": {
         #     "Monday": "Pizza",
         #     "Tuesday": "Salad",

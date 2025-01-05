@@ -38,8 +38,21 @@ body {
 	transition: background-color 0.3s ease;
 }
 
+.icon-button-small {
+	display: inline-block;
+	color: #333;
+	background-color: #ddd;
+	border: none;
+	border-radius: 5px;
+	text-decoration: none;
+}
+
 .icon-button i {
 	font-size: 40px;
+}
+
+.icon-button-small {
+	font-size: 20px;
 }
 
 .clock {
