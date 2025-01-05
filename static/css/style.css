@@ -41,10 +41,18 @@ body {
 .icon-button-small {
 	display: inline-block;
 	color: #333;
+	width: 30px;
+	height: 30px;
 	background-color: #ddd;
 	border: none;
 	border-radius: 5px;
 	text-decoration: none;
+	text-align: center;
+}
+
+.container-custom {
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 .icon-button i {
