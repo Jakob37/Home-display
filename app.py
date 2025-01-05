@@ -131,6 +131,13 @@ def hello_user():
     users = ["Xuan", "Jakob", "Alvar"]
 
 
+@app.route("/planning", methods=["GET", "POST"])
+def planning():
+    return render_template(
+        "planning.html",
+    )
+
+
 @app.route("/eating", methods=["GET", "POST"])
 def eating_page():
 

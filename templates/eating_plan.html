@@ -25,7 +25,7 @@
 {% macro render_select(week, day, available_foods_grouped, selected_food_type, selected_food) %}
 
 <div class="row">
-  <div class="col-md-3">
+  <div class="col-md-2">
     <select name="{{ day }}-foodtype-plan" class="form-select"
       style='height: 60px; font-family:Arial; font-size: 30px;'>
       {% for food_type in available_foods_grouped %}
@@ -37,7 +37,7 @@
       {% endfor %}
     </select>
   </div>
-  <div class="col-md-9">
+  <div class="col-md-10">
     <select name="{{ day }}-food-plan" class="form-select" style="font-size: 30px;">
       {% for food in available_foods_grouped[selected_food_type] %}
       {% if food == selected_food %}
