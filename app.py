@@ -133,6 +133,10 @@ def hello_user():
 
 @app.route("/planning", methods=["GET", "POST"])
 def planning():
+
+    # FIXME: Pass the food selection db entry
+    # How to share these with the /eating route?
+
     return render_template(
         "planning.html",
     )
