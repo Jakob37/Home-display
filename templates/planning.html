@@ -1,26 +1,11 @@
-{% extends 'base.html' %} {% block head_content %}
+{% extends 'base.html' %}
+{% from "macros.html" import food_icon %}
+
+{% block head_content %}
 <meta http-equiv="refresh" content="1800" />
 {% endblock %} {% block title_content %}
 <h1>Maträtter</h1>
 {% endblock %}
-
-
-{% macro food_icon(food_type) %}
-{% if food_type == "Fisk" %}
-&#x1F41F;
-{% elif food_type == "Ägg" %}
-&#x1F95A;
-{% elif food_type == "Tofu" %}
-&#x1F95C;
-{% elif food_type == "Kött" %}
-&#x1F356;
-{% elif food_type == "Kyckling" %}
-&#x1F414;
-{% else %}
-<!-- &#x1F41F; -->
-{{food_type}}
-{% endif %}
-{% endmacro %}
 
 
 {% macro food_type(food_type, foods) %}

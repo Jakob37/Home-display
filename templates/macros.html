@@ -1,0 +1,16 @@
+{% macro food_icon(food_type) %}
+{% if food_type == "Fisk" %}
+&#x1F41F;
+{% elif food_type == "Ägg" %}
+&#x1F95A;
+{% elif food_type == "Tofu" %}
+&#x1F95C;
+{% elif food_type == "Kött" %}
+&#x1F356;
+{% elif food_type == "Kyckling" %}
+&#x1F414;
+{% else %}
+<!-- &#x1F41F; -->
+{{food_type}}
+{% endif %}
+{% endmacro %}
