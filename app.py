@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 from flask import Flask, redirect, render_template, jsonify, request, url_for
+from src.constants import COLORS, DAYS, ICONS
 from src.db.db import load_foods, load_selections, save_foods, save_selections
 from src.weather_request import get_temperature
-from src.traffic import get_train_table_zip
 from src.pollen import get_pollen
 
 app = Flask(__name__)
@@ -29,33 +29,25 @@ class WeatherIcon:
 
 def get_weather_icons(temperature: int) -> str:
 
-    blue = "steelblue"
-
-    deepblue = "blue"
-    lightblue = "lightblue"
-    yellow = "yellow"
-    orange = "orange"
-    red = "red"
-
     weather_icons = []
     if temperature <= 0:
-        weather_icons.append(WeatherIcon("fa-snowflake", blue))
+        weather_icons.append(WeatherIcon(ICONS.snowflake, COLORS.blue))
     if temperature <= 7:
-        weather_icons.append(WeatherIcon("fa-mitten", blue))
-        weather_icons.append(WeatherIcon("fa-mitten", blue))
+        weather_icons.append(WeatherIcon(ICONS.mitten, COLORS.blue))
+        weather_icons.append(WeatherIcon(ICONS.mitten, COLORS.blue))
     if temperature <= 12:
-        weather_icons.append(WeatherIcon("fa-hat-wizard", blue))
+        weather_icons.append(WeatherIcon(ICONS.hat, COLORS.blue))
 
     if temperature <= 0:
-        weather_icons.append(WeatherIcon("fa-temperature-empty", deepblue))
+        weather_icons.append(WeatherIcon(ICONS.temperature_empty, COLORS.deepblue))
     elif temperature <= 7:
-        weather_icons.append(WeatherIcon("fa-temperature-low", lightblue))
+        weather_icons.append(WeatherIcon(ICONS.temperature_low, COLORS.lightblue))
     elif temperature <= 12:
-        weather_icons.append(WeatherIcon("fa-temperature-half", yellow))
+        weather_icons.append(WeatherIcon(ICONS.temperature_half, COLORS.yellow))
     elif temperature <= 20:
-        weather_icons.append(WeatherIcon("fa-temperature-full", orange))
+        weather_icons.append(WeatherIcon(ICONS.temperature_full, COLORS.orange))
     else:
-        weather_icons.append(WeatherIcon("fa-temperature-high", red))
+        weather_icons.append(WeatherIcon(ICONS.temperature_high, COLORS.red))
 
     return weather_icons
 
@@ -101,15 +93,6 @@ def index():
         "food_display": food_selections,
     }
 
-    # data = {
-    #     use_local = USE_LOCAL,
-    #     title,
-    #     my_clock,
-    #     my_date,
-    #     lund_temperature,
-    #     pollen
-    # }
-
     return render_template("weather.html", **data)
 
 
@@ -137,15 +120,7 @@ def hello_user():
 
 
 def get_foods() -> dict[str, list[str]]:
-    available_foods_grouped = {
-        "Fisk": ["Fiskpinnar", "Flundra"],
-        "Ägg": ["Omelett", "Pannkakor"],
-        "Kött": ["Köttbullar", "Prinskorv"],
-        "Kyckling": ["Kyckling i ugn"],
-        "Tofu": ["Stekt med paprika"],
-    }
     return load_foods()
-    # return available_foods_grouped
 
 
 @app.route("/planning/remove_food_type/<food_type>", methods=["POST"])
@@ -194,8 +169,6 @@ def planning():
 
 @app.route("/eating", methods=["GET", "POST"])
 def eating_page():
-
-    DAYS = ["Mo", "Tu", "We", "Th", "Fr"]
 
     food_selections = load_selections()
     for day in DAYS:
