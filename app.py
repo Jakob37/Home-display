@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from flask import Flask, redirect, render_template, jsonify, request, url_for
-from src.db.db import load_selections, save_selections
+from src.db.db import load_foods, load_selections, save_foods, save_selections
 from src.weather_request import get_temperature
 from src.traffic import get_train_table_zip
 from src.pollen import get_pollen
@@ -139,7 +139,18 @@ def get_foods() -> dict[str, list[str]]:
         "Kyckling": ["Kyckling i ugn"],
         "Tofu": ["Stekt med paprika"],
     }
-    return available_foods_grouped
+    return load_foods()
+    # return available_foods_grouped
+
+
+@app.route("/planning/add_category", methods=["POST"])
+def add_category():
+    print("Adding category")
+    print(request.form["textinput"])
+    available_foods = get_foods()
+    available_foods[request.form["textinput"]] = []
+    save_foods(available_foods)
+    return planning()
 
 
 @app.route("/planning", methods=["GET", "POST"])
@@ -149,7 +160,6 @@ def planning():
     # How to share these with the /eating route?
 
     available_foods = get_foods()
-
     return render_template("planning.html", foods=available_foods)
 
 
@@ -159,8 +169,6 @@ def eating_page():
     DAYS = ["Mo", "Tu", "We", "Th", "Fr"]
 
     food_selections = load_selections()
-    print("Loaded selections")
-    print(food_selections)
     for day in DAYS:
         if not food_selections.get(day):
             food_selections[day] = {
@@ -180,12 +188,6 @@ def eating_page():
             print(f"Food type: {foodtype} food: {food}")
             food_selects[day] = {"type": foodtype, "food": food}
 
-        print("Grabbed food_selects")
-        print(food_selects)
-
-        # day = request.form["day"]
-        # selected_food = request.form["selected_food"]
-        # selected_food_type_per_day[day] = selected_food
         save_selections(food_selects)
         return redirect(url_for("eating_page"))
 
@@ -208,8 +210,6 @@ def eating_page():
     # food_types = ["&#xf00c; Fisk!", "Ägg", "Kött", "Kyckling", "Tofu"]
 
     available_foods_grouped = get_foods()
-
-    print(food_selections)
 
     return render_template(
         "eating_plan.html",

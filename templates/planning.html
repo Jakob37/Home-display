@@ -52,9 +52,16 @@
 
 <div class="container-custom">
     <div class="row mb-3">
-        <div class="col-md-6">
-            <input />
-        </div>
+        <form action="/planning/add_category" method="post">
+            <div class="col-md-6">
+                <input name="textinput" />
+            </div>
+            <div class="col-md-1">
+                <button type="submit" class="icon-button-small" title="Add food category">
+                    <i class="fas fa-add"></i>
+                </button>
+            </div>
+        </form>
     </div>
     <div class="row mb-4">
         {% for food in foods %}
