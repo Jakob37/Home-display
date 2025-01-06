@@ -30,16 +30,25 @@
     </div>
 </div>
 <div class="row">
-    <form action="/planning/add_food/{{food_type}}" method="post">
-        <div class="col-md-9">
-            <input name="dish" />
-        </div>
-        <div class="col-md-3">
-            <button type="submit" class="icon-button-small" title="Add food">
-                <i class="fas fa-add"></i>
+    <div class="col-md-6">
+        <form action="/planning/add_food/{{food_type}}" method="post">
+            <div class="col-md-9">
+                <input name="dish" />
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="icon-button-small" title="Add food">
+                    <i class="fas fa-add"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-1">
+        <form action="/planning/remove_food_type/{{food_type}}" method="post">
+            <button type="submit" class="icon-button-small" title="Remove food type">
+                <i class="fas fa-remove"></i>
             </button>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 {% for food in foods %}
 <div class="row mb-1">
@@ -47,9 +56,11 @@
         {{food}}
     </div>
     <div class="col-md-3">
-        <a class="icon-button-small" title="Remove food">
-            <i class="fas fa-remove"></i>
-        </a>
+        <form action="/planning/remove_dish/{{food_type}}/{{food}}" method="post">
+            <button type="submit" class="icon-button-small" title="Remove food">
+                <i class="fas fa-remove"></i>
+            </button>
+        </form>
     </div>
 </div>
 {% endfor %}
