@@ -15,6 +15,23 @@
 </span>
 {% endblock %}
 
+{% macro food_icon(food_type) %}
+{% if food_type == "Fisk" %}
+&#x1F41F;
+{% elif food_type == "Ägg" %}
+&#x1F95A;
+{% elif food_type == "Tofu" %}
+&#x1F95C;
+{% elif food_type == "Kött" %}
+&#x1F356;
+{% elif food_type == "Kyckling" %}
+&#x1F414;
+{% else %}
+<!-- &#x1F41F; -->
+{{food_type}}
+{% endif %}
+{% endmacro %}
+
 {% block main_content %}
 <div id="smhi">
 	{% if use_local %}
@@ -28,16 +45,25 @@
     &#9733;&#9733;&#9733;&#9733;&#9733;
 </div> -->
 
-<div class="row">
-	{% if display_text|length > 0 %}
-	<div class="col-md-3">
-		{% for text_piece in display_text %}
-		<div class="row ms-2" style="font-size: 40px; font-weight: 800;">{{text_piece}}</div>
+<div class="row" style="padding-left: 10px;">
+	{% if food_display|length > 0 %}
+	<div class="col-md-4 ml-3">
+		{% for day, food_entry in food_display.items() %}
+		<div class="row align-items-center">
+			<div class="col-md-3">
+				<div style="font-size: 30px;">{{day[0]}}
+				</div>
+			</div>
+			<div class="col-md-9" style="font-size: 30px">
+				{{food_icon(food_entry.type)}}
+				{{food_entry.food}}
+			</div>
+		</div>
 		{% endfor %}
 	</div>
 	{% endif %}
 	{% if weather_icons|length > 0 %}
-	<div style="font-size: 90px; text-align: center;" class="col-md-9">
+	<div style="font-size: 90px; text-align: center;" class="col-md-8">
 		{% for weather_icon in weather_icons %}
 		<i style="color: {{ weather_icon.color }};" class="fas {{ weather_icon.icon }}"></i>
 		{% endfor %}

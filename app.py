@@ -85,6 +85,11 @@ def index():
 
     weather_icons = get_weather_icons(lund_temperature)
 
+    food_selections = load_selections()
+    # display_text = [
+    #     f"{day}: {food["type"]} {food["food"]}" for day, food in food_selections.items()
+    # ]
+
     data = {
         "use_local": USE_LOCAL,
         "title": title,
@@ -93,7 +98,7 @@ def index():
         "lund_temperature": lund_temperature,
         "pollen": pollen,
         "weather_icons": weather_icons,
-        "display_text": ["ALVAR", "PAPPA", "MAMMA"],
+        "food_display": food_selections,
     }
 
     # data = {
