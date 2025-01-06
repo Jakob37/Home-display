@@ -143,14 +143,22 @@ def get_foods() -> dict[str, list[str]]:
     # return available_foods_grouped
 
 
+@app.route("/planning/add_food/<food_type>", methods=["POST"])
+def add_food(food_type: str):
+    dish_name = request.form["dish"]
+    available_foods = get_foods()
+    available_foods[food_type].append(dish_name)
+    save_foods(available_foods)
+    return redirect(url_for("planning"))
+
+
 @app.route("/planning/add_category", methods=["POST"])
 def add_category():
-    print("Adding category")
     print(request.form["textinput"])
     available_foods = get_foods()
     available_foods[request.form["textinput"]] = []
     save_foods(available_foods)
-    return planning()
+    return redirect(url_for("planning"))
 
 
 @app.route("/planning", methods=["GET", "POST"])

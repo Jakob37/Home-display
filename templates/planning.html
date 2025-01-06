@@ -25,14 +25,21 @@
 
 {% macro food_type(food_type, foods) %}
 <div class="row mb-3">
-    <div class="col-md-8" style="font-weight: bold;">
+    <div style="font-weight: bold;">
         {{food_type}}
     </div>
-    <div class="col-md-3">
-        <a href="/" class="icon-button-small" title="Weather">
-            <i class="fas fa-add"></i>
-        </a>
-    </div>
+</div>
+<div class="row">
+    <form action="/planning/add_food/{{food_type}}" method="post">
+        <div class="col-md-9">
+            <input name="dish" />
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="icon-button-small" title="Add food">
+                <i class="fas fa-add"></i>
+            </button>
+        </div>
+    </form>
 </div>
 {% for food in foods %}
 <div class="row mb-1">
@@ -40,7 +47,7 @@
         {{food}}
     </div>
     <div class="col-md-3">
-        <a href="/" class="icon-button-small" title="Weather">
+        <a class="icon-button-small" title="Remove food">
             <i class="fas fa-remove"></i>
         </a>
     </div>
