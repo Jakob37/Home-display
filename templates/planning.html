@@ -23,10 +23,46 @@
 {% endmacro %}
 
 
+{% macro food_type(food_type, foods) %}
+<div class="row mb-3">
+    <div class="col-md-8" style="font-weight: bold;">
+        {{food_type}}
+    </div>
+    <div class="col-md-3">
+        <a href="/" class="icon-button-small" title="Weather">
+            <i class="fas fa-add"></i>
+        </a>
+    </div>
+</div>
+{% for food in foods %}
+<div class="row mb-1">
+    <div class="col-md-8">
+        {{food}}
+    </div>
+    <div class="col-md-3">
+        <a href="/" class="icon-button-small" title="Weather">
+            <i class="fas fa-remove"></i>
+        </a>
+    </div>
+</div>
+{% endfor %}
+{% endmacro %}
+
 {% block main_content %}
 
 <div class="container-custom">
-    <div>Matplanering</div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <input />
+        </div>
+    </div>
+    <div class="row mb-4">
+        {% for food in foods %}
+        <div class="col-md-3">
+            {{food_type(food, foods[food])}}
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
 <meta http-equiv="refresh" content="1800" />

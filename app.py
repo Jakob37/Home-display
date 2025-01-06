@@ -131,15 +131,26 @@ def hello_user():
     users = ["Xuan", "Jakob", "Alvar"]
 
 
+def get_foods() -> dict[str, list[str]]:
+    available_foods_grouped = {
+        "Fisk": ["Fiskpinnar", "Flundra"],
+        "Ägg": ["Omelett", "Pannkakor"],
+        "Kött": ["Köttbullar", "Prinskorv"],
+        "Kyckling": ["Kyckling i ugn"],
+        "Tofu": ["Stekt med paprika"],
+    }
+    return available_foods_grouped
+
+
 @app.route("/planning", methods=["GET", "POST"])
 def planning():
 
     # FIXME: Pass the food selection db entry
     # How to share these with the /eating route?
 
-    return render_template(
-        "planning.html",
-    )
+    available_foods = get_foods()
+
+    return render_template("planning.html", foods=available_foods)
 
 
 @app.route("/eating", methods=["GET", "POST"])
@@ -193,59 +204,16 @@ def eating_page():
             "Thursday": "Fish",
             "Friday": "Steak",
         },
-        # "14": {
-        #     "Monday": "Pizza",
-        #     "Tuesday": "Salad",
-        #     "Wednesday": "Pasta",
-        #     "Thursday": "Fish",
-        #     "Friday": "Steak",
-        # },
     }
-    available_foods = [
-        "Pizza",
-        "Salad",
-        "Pasta",
-        "Fish",
-        "Steak",
-        "Soup",
-        "Sushi",
-        "Curry",
-        "Burger",
-        "Tacos",
-        "Ramen",
-        "Chicken",
-        "BBQ",
-        "Paella",
-    ]
     # food_types = ["&#xf00c; Fisk!", "Ägg", "Kött", "Kyckling", "Tofu"]
 
-    available_foods_grouped = {
-        "Fisk": ["Fiskpinnar", "Flundra"],
-        "Ägg": ["Omelett", "Pannkakor"],
-        "Kött": ["Köttbullar", "Prinskorv"],
-        "Kyckling": ["Kyckling i ugn"],
-        "Tofu": ["Stekt med paprika"],
-    }
-
-    selected_food_per_day = {
-        "Mo": "Fiskpinnar",
-        "Tu": "Fiskpinnar",
-        "We": "Fiskpinnar",
-        "Th": "Fiskpinnar",
-        "Fr": "Flundra",
-    }
-
-    # data = {
-    #     "weeks": weeks,
-    #     "available_foods": available_foods
-    # }
+    available_foods_grouped = get_foods()
 
     print(food_selections)
 
     return render_template(
         "eating_plan.html",
         weeks=weeks,
-        available_foods=available_foods,
         available_foods_grouped=available_foods_grouped,
         food_selections=food_selections,
         # selected_food_per_day=selected_food_per_day,

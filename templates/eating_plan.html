@@ -67,7 +67,7 @@
 
 {% endmacro %}
 
-{% macro render_week(week, meals, available_foods, available_foods_grouped) %}
+{% macro render_week(week, meals, available_foods_grouped) %}
 
 
 <div class="mb-3 col-md-3">
@@ -103,7 +103,7 @@
   </div>
   <div class="row">
     {% for week, meals in weeks.items() %}
-    {{ render_week(week, meals, available_foods, available_foods_grouped) }}
+    {{ render_week(week, meals, available_foods_grouped) }}
     {% endfor %}
   </div>
 </div>
