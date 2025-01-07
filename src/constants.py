@@ -6,7 +6,7 @@ available_foods_grouped = {
     "Tofu": ["Stekt med paprika"],
 }
 
-DAYS = ["Mo", "Tu", "We", "Th", "Fr"]
+DAYS = ["Mo", "Tu", "We", "Th", "Fr", "Lö1", "Lö2", "Sö1", "Sö2"]
 
 
 class COLORS:

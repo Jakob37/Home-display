@@ -2,9 +2,17 @@
 
 from flask import Flask, redirect, render_template, jsonify, request, url_for
 from src.constants import COLORS, DAYS, ICONS
-from src.db.db import load_foods, load_selections, save_foods, save_selections
+from src.db.db import (
+    load_food_weeks,
+    load_foods,
+    load_selections,
+    save_food_weeks,
+    save_foods,
+    save_selections,
+)
 from src.weather_request import get_temperature
 from src.pollen import get_pollen
+import datetime
 
 app = Flask(__name__)
 import datetime
@@ -167,6 +175,18 @@ def planning():
     return render_template("planning.html", foods=available_foods)
 
 
+@app.route("/eating/save_week", methods=["POST"])
+def save_week():
+    print("Save week triggered")
+    food_selections = load_selections()
+    food_weeks = load_food_weeks()
+    foods_to_save = [entry["food"] for entry in food_selections.values()]
+    current_time = str(datetime.datetime.now())
+    food_weeks[current_time] = foods_to_save
+    save_food_weeks(food_weeks)
+    return redirect(url_for("eating_page"))
+
+
 @app.route("/eating", methods=["GET", "POST"])
 def eating_page():
 
@@ -193,22 +213,9 @@ def eating_page():
         save_selections(food_selects)
         return redirect(url_for("eating_page"))
 
-    weeks = {
-        "12": {
-            "Monday": "Pizza",
-            "Tuesday": "Salad",
-            "Wednesday": "Pasta",
-            "Thursday": "Fish",
-            "Friday": "Steak",
-        },
-        "13": {
-            "Monday": "Pizza",
-            "Tuesday": "Salad",
-            "Wednesday": "Pasta",
-            "Thursday": "Fish",
-            "Friday": "Steak",
-        },
-    }
+    food_selections = load_selections()
+
+    weeks = load_food_weeks()
     # food_types = ["&#xf00c; Fisk!", "Ägg", "Kött", "Kyckling", "Tofu"]
 
     available_foods_grouped = get_foods()

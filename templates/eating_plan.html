@@ -58,7 +58,7 @@
 
 <div class="mb-3 col-md-3">
   <div class="row">
-    <div class="col-md-8">v{{week}}</div>
+    <div class="col-md-8">{{week.split(" ")[0]}}</div>
     <div class="col-md-3">
       <a href="/" class="icon-button-small" title="Weather">
         <i class="fas fa-remove"></i>
@@ -66,7 +66,7 @@
     </div>
   </div>
   <div>
-    {% for day, meal in meals.items() %}
+    {% for meal in meals %}
     <div>
       <p>{{meal}}</p>
     </div>
@@ -81,7 +81,9 @@
 <div class="container-custom">
   <div class="row">
     <div class="col-md-1">
-      <button>Ny vecka</button>
+      <form action="/eating/save_week" method="post">
+        <button>Spara vecka</button>
+      </form>
     </div>
     <div class="col-md-11">
       {{ render_planning(available_foods_grouped, food_selections) }}
