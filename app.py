@@ -10,7 +10,7 @@ from src.db.db import (
     save_foods,
     save_selections,
 )
-from src.weather_request import get_temperature
+from src.weather_request import get_long_term_forecast, get_temperature
 from src.pollen import get_pollen
 import datetime
 
@@ -115,6 +115,31 @@ def index():
     }
 
     return render_template("weather.html", **data)
+
+
+@app.route("/weather/long-term")
+def weather_long_term():
+    if USE_LOCAL:
+        today = datetime.date.today()
+        long_term_forecast = [
+            {
+                "date": (today + datetime.timedelta(days=i)).isoformat(),
+                "weekday": (today + datetime.timedelta(days=i)).strftime("%a"),
+                "min_temp": DEBUG_TEMP - 2,
+                "max_temp": DEBUG_TEMP + 2,
+                "symbol": "partly cloudy",
+            }
+            for i in range(10)
+        ]
+    else:
+        lund_lat = config["weather"]["lat"]
+        lund_long = config["weather"]["long"]
+        long_term_forecast = get_long_term_forecast(lund_lat, lund_long)
+    return render_template(
+        "long_term_weather.html",
+        title="Long-term forecast",
+        long_term_forecast=long_term_forecast,
+    )
 
 
 @app.route("/clock")
