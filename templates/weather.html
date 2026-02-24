@@ -31,7 +31,7 @@
 </div> -->
 
 <div class="row" style="padding-left: 10px;">
-	{% if food_display|length > 0 %}
+	{% if enable_food_tracking and food_display|length > 0 %}
 	<div class="col-md-4 ml-3">
 		{% for day, food_entry in food_display.items() %}
 		<div class="row align-items-center">

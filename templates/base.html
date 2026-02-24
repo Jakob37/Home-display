@@ -13,12 +13,14 @@
             <a href="/" class="icon-button" title="Weather">
                 <i class="fas fa-cloud-sun"></i>
             </a>
-            <a href="/eating" class="icon-button" title="Food">
-                <i class="fas fa-utensils"></i>
-            </a>
-            <a href="/planning" class="icon-button" title="Food types">
-                <i class="fas fa-list"></i>
-            </a>
+            {% if enable_food_tracking %}
+                <a href="/eating" class="icon-button" title="Food">
+                    <i class="fas fa-utensils"></i>
+                </a>
+                <a href="/planning" class="icon-button" title="Food types">
+                    <i class="fas fa-list"></i>
+                </a>
+            {% endif %}
         </div>
         <div class="title">
             {% block title_content %}

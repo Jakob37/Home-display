@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, redirect, render_template, jsonify, request, url_for
+from flask import Flask, abort, redirect, render_template, jsonify, request, url_for
 from src.constants import COLORS, DAYS, ICONS
 from src.db.db import (
     load_food_weeks,
@@ -27,6 +27,7 @@ cache["clock_seconds"] = False
 USE_LOCAL = True
 DEBUG_MODE = True
 DEBUG_TEMP = 3
+ENABLE_FOOD_TRACKING = False
 
 
 class WeatherIcon:
@@ -60,6 +61,16 @@ def get_weather_icons(temperature: int) -> str:
     return weather_icons
 
 
+def require_food_tracking_enabled() -> None:
+    if not ENABLE_FOOD_TRACKING:
+        abort(404)
+
+
+@app.context_processor
+def inject_feature_flags():
+    return {"enable_food_tracking": ENABLE_FOOD_TRACKING}
+
+
 @app.route("/")
 def index():
     title = "Home display"
@@ -85,7 +96,9 @@ def index():
 
     weather_icons = get_weather_icons(lund_temperature)
 
-    food_selections = load_selections()
+    food_selections = {}
+    if ENABLE_FOOD_TRACKING:
+        food_selections = load_selections()
     # display_text = [
     #     f"{day}: {food["type"]} {food["food"]}" for day, food in food_selections.items()
     # ]
@@ -133,6 +146,7 @@ def get_foods() -> dict[str, list[str]]:
 
 @app.route("/planning/remove_food_type/<food_type>", methods=["POST"])
 def remove_food_type(food_type: str):
+    require_food_tracking_enabled()
     available_foods = get_foods()
     del available_foods[food_type]
     save_foods(available_foods)
@@ -141,6 +155,7 @@ def remove_food_type(food_type: str):
 
 @app.route("/planning/remove_dish/<food_type>/<dish_name>", methods=["POST"])
 def remove_dish(food_type: str, dish_name: str):
+    require_food_tracking_enabled()
     available_foods = get_foods()
     available_foods[food_type].remove(dish_name)
     save_foods(available_foods)
@@ -149,6 +164,7 @@ def remove_dish(food_type: str, dish_name: str):
 
 @app.route("/planning/add_food/<food_type>", methods=["POST"])
 def add_food(food_type: str):
+    require_food_tracking_enabled()
     dish_name = request.form["dish"]
     available_foods = get_foods()
     available_foods[food_type].append(dish_name)
@@ -158,6 +174,7 @@ def add_food(food_type: str):
 
 @app.route("/planning/add_category", methods=["POST"])
 def add_category():
+    require_food_tracking_enabled()
     print(request.form["textinput"])
     available_foods = get_foods()
     available_foods[request.form["textinput"]] = []
@@ -167,6 +184,7 @@ def add_category():
 
 @app.route("/planning", methods=["GET", "POST"])
 def planning():
+    require_food_tracking_enabled()
 
     # FIXME: Pass the food selection db entry
     # How to share these with the /eating route?
@@ -177,6 +195,7 @@ def planning():
 
 @app.route("/eating/save_week", methods=["POST"])
 def save_week():
+    require_food_tracking_enabled()
     print("Save week triggered")
     food_selections = load_selections()
     food_weeks = load_food_weeks()
@@ -189,6 +208,7 @@ def save_week():
 
 @app.route("/eating", methods=["GET", "POST"])
 def eating_page():
+    require_food_tracking_enabled()
 
     food_selections = load_selections()
     for day in DAYS:
