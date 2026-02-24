@@ -6,6 +6,25 @@ from datetime import datetime
 import requests
 
 
+def _symbol_to_icon(symbol: str) -> str:
+    lower_symbol = symbol.lower()
+    if "thunder" in lower_symbol:
+        return "fa-bolt"
+    if "snow" in lower_symbol or "sleet" in lower_symbol:
+        return "fa-snowflake"
+    if "rain" in lower_symbol or "drizzle" in lower_symbol:
+        return "fa-cloud-rain"
+    if "fog" in lower_symbol:
+        return "fa-smog"
+    if "partlycloudy" in lower_symbol:
+        return "fa-cloud-sun"
+    if "cloudy" in lower_symbol:
+        return "fa-cloud"
+    if "clearsky" in lower_symbol:
+        return "fa-sun"
+    return "fa-cloud"
+
+
 def _fetch_forecast(latitude: float, longitude: float) -> list[dict]:
     url = f"https://api.met.no/weatherapi/locationforecast/2.0/compact?lat={latitude}&lon={longitude}"
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
@@ -45,12 +64,12 @@ def get_long_term_forecast(latitude: float, longitude: float, days: int = 10) ->
             item["data"]["instant"]["details"]["air_temperature"] for item in day_entries
         ]
 
-        symbol = "-"
+        symbol = "cloudy"
         for item in day_entries:
             next_6 = item["data"].get("next_6_hours", {}).get("summary", {}).get("symbol_code")
             next_1 = item["data"].get("next_1_hours", {}).get("summary", {}).get("symbol_code")
             symbol = next_6 or next_1 or symbol
-            if symbol != "-":
+            if symbol != "cloudy":
                 break
 
         forecast.append(
@@ -60,6 +79,7 @@ def get_long_term_forecast(latitude: float, longitude: float, days: int = 10) ->
                 "min_temp": round(min(temperatures)),
                 "max_temp": round(max(temperatures)),
                 "symbol": symbol.replace("_", " "),
+                "icon": _symbol_to_icon(symbol),
             }
         )
 

@@ -24,7 +24,7 @@ config.read("app.config")
 cache = dict()
 cache["clock_seconds"] = False
 
-USE_LOCAL = True
+USE_LOCAL = False
 DEBUG_MODE = True
 DEBUG_TEMP = 3
 ENABLE_FOOD_TRACKING = False
@@ -128,6 +128,7 @@ def weather_long_term():
                 "min_temp": DEBUG_TEMP - 2,
                 "max_temp": DEBUG_TEMP + 2,
                 "symbol": "partly cloudy",
+                "icon": "fa-cloud-sun",
             }
             for i in range(10)
         ]

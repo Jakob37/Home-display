@@ -23,7 +23,9 @@
                 <td>{{ entry.date }}</td>
                 <td>{{ entry.min_temp }}&deg;C</td>
                 <td>{{ entry.max_temp }}&deg;C</td>
-                <td>{{ entry.symbol }}</td>
+                <td>
+                    <i class="fas {{ entry.icon }}" title="{{ entry.symbol }}" aria-label="{{ entry.symbol }}"></i>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
