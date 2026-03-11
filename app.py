@@ -10,7 +10,8 @@ from src.db.db import (
     save_foods,
     save_selections,
 )
-from src.weather_request import get_long_term_forecast, get_temperature
+from src.traffic import TrafficApiError, get_station_timetables, resolve_stop_group
+from src.weather_request import get_long_term_forecast, get_weather_snapshot
 from src.pollen import get_pollen
 import datetime
 
@@ -71,6 +72,91 @@ def inject_feature_flags():
     return {"enable_food_tracking": ENABLE_FOOD_TRACKING}
 
 
+def _get_traffic_stop_config(prefix: str, default_label: str, default_mode: str) -> dict | None:
+    if not config.has_section("traffic"):
+        return None
+
+    area_id = config.get("traffic", f"{prefix}_area_id", fallback="").strip()
+    query = config.get("traffic", f"{prefix}_query", fallback="").strip()
+    if not area_id and not query:
+        return None
+
+    return {
+        "label": config.get("traffic", f"{prefix}_label", fallback=default_label).strip(),
+        "area_id": area_id,
+        "query": query,
+        "transport_mode": config.get(
+            "traffic", f"{prefix}_transport_mode", fallback=default_mode
+        )
+        .strip()
+        .upper(),
+    }
+
+
+def _get_traffic_page_data() -> dict:
+    if not config.has_section("traffic"):
+        return {
+            "stations": [],
+            "error": "No [traffic] section configured yet.",
+            "attribution": "Data from Trafiklab.se",
+        }
+
+    api_key = config.get("traffic", "trafiklab_api_key", fallback="").strip()
+    board_limit = config.getint("traffic", "board_limit", fallback=6)
+    stops = [
+        _get_traffic_stop_config("train", "Train station", "TRAIN"),
+        _get_traffic_stop_config("bus", "Bus station", "BUS"),
+    ]
+    configured_stops = [stop for stop in stops if stop is not None]
+
+    if not api_key:
+        return {
+            "stations": [],
+            "error": "Missing trafiklab_api_key in [traffic] config.",
+            "attribution": "Data from Trafiklab.se",
+        }
+
+    if not configured_stops:
+        return {
+            "stations": [],
+            "error": "No traffic stops configured yet. Add train_area_id and/or bus_area_id in [traffic].",
+            "attribution": "Data from Trafiklab.se",
+        }
+
+    stations = []
+    errors = []
+    for stop in configured_stops:
+        try:
+            area_id = stop["area_id"]
+            if not area_id:
+                matched_stop = resolve_stop_group(
+                    api_key=api_key,
+                    search_value=stop["query"],
+                    transport_mode=stop["transport_mode"],
+                )
+                area_id = matched_stop["id"]
+                if not stop["label"]:
+                    stop["label"] = matched_stop["name"]
+
+            stations.append(
+                get_station_timetables(
+                    api_key=api_key,
+                    label=stop["label"],
+                    area_id=area_id,
+                    transport_mode=stop["transport_mode"],
+                    limit=board_limit,
+                )
+            )
+        except TrafficApiError as exc:
+            errors.append(f"{stop['label']}: {exc}")
+
+    return {
+        "stations": stations,
+        "error": " | ".join(errors) if errors else "",
+        "attribution": "Data from Trafiklab.se",
+    }
+
+
 @app.route("/")
 def index():
     title = "Home display"
@@ -84,8 +170,21 @@ def index():
 
     if USE_LOCAL:
         lund_temperature = DEBUG_TEMP
+        long_term_forecast = [
+            {
+                "date": (datetime.date.today() + datetime.timedelta(days=i)).isoformat(),
+                "weekday": (datetime.date.today() + datetime.timedelta(days=i)).strftime("%a"),
+                "min_temp": DEBUG_TEMP - 2,
+                "max_temp": DEBUG_TEMP + 2,
+                "symbol": "partly cloudy",
+                "icon": "fa-cloud-sun",
+            }
+            for i in range(7)
+        ]
     else:
-        lund_temperature = round(get_temperature(lund_lat, lund_long))
+        weather_snapshot = get_weather_snapshot(float(lund_lat), float(lund_long), days=7)
+        lund_temperature = round(weather_snapshot["temperature"])
+        long_term_forecast = weather_snapshot["long_term_forecast"]
 
     if USE_LOCAL:
         pollen = {}
@@ -112,6 +211,7 @@ def index():
         "pollen": pollen,
         "weather_icons": weather_icons,
         "food_display": food_selections,
+        "long_term_forecast": long_term_forecast,
     }
 
     return render_template("weather.html", **data)
@@ -141,6 +241,12 @@ def weather_long_term():
         title="Long-term forecast",
         long_term_forecast=long_term_forecast,
     )
+
+
+@app.route("/traffic")
+def traffic():
+    traffic_data = _get_traffic_page_data()
+    return render_template("traffic.html", title="Traffic", **traffic_data)
 
 
 @app.route("/clock")

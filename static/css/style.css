@@ -67,3 +67,172 @@ body {
 	text-align: right;
 	flex-grow: 1;
 }
+
+.pollen-row {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	font-size: 30px;
+	margin: 8px 0;
+}
+
+.pollen-name {
+	min-width: 150px;
+}
+
+.pollen-scale {
+	display: flex;
+	gap: 8px;
+}
+
+.pollen-box {
+	width: 28px;
+	height: 28px;
+	border-radius: 6px;
+	opacity: 0.2;
+}
+
+.pollen-box.is-active {
+	opacity: 1;
+}
+
+.pollen-box-1 {
+	background-color: #f4d35e;
+}
+
+.pollen-box-2 {
+	background-color: #ee964b;
+}
+
+.pollen-box-3 {
+	background-color: #f28444;
+}
+
+.pollen-box-4 {
+	background-color: #e76f51;
+}
+
+.pollen-box-5 {
+	background-color: #d62828;
+}
+
+.forecast-strip {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	gap: 12px;
+	margin-top: 18px;
+}
+
+.forecast-card {
+	background: linear-gradient(180deg, #f7f7f7 0%, #ececec 100%);
+	border-radius: 10px;
+	padding: 12px 8px;
+	text-align: center;
+}
+
+.forecast-day {
+	font-size: 22px;
+	font-weight: 700;
+}
+
+.forecast-date {
+	font-size: 16px;
+	color: #555;
+}
+
+.forecast-icon {
+	font-size: 28px;
+	margin: 10px 0;
+	color: #326891;
+}
+
+.forecast-temps {
+	font-size: 18px;
+}
+
+.traffic-page {
+	padding-bottom: 24px;
+}
+
+.traffic-error {
+	background-color: #f8d7da;
+	border-radius: 8px;
+	color: #842029;
+	margin: 16px 0;
+	padding: 12px 16px;
+}
+
+.traffic-station {
+	background: linear-gradient(180deg, #fbfbfb 0%, #f0f0f0 100%);
+	border-radius: 12px;
+	margin: 16px 0;
+	padding: 18px;
+}
+
+.traffic-station-header {
+	align-items: baseline;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 12px;
+}
+
+.traffic-station-header h2 {
+	margin: 0;
+}
+
+.traffic-station-meta,
+.traffic-updated,
+.traffic-minutes,
+.traffic-attribution {
+	color: #666;
+	font-size: 14px;
+}
+
+.traffic-boards {
+	display: grid;
+	gap: 18px;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.traffic-board h3 {
+	font-size: 22px;
+	margin-bottom: 8px;
+}
+
+.traffic-board table {
+	background-color: #fff;
+	border-radius: 8px;
+	margin-bottom: 0;
+	overflow: hidden;
+}
+
+.traffic-board td,
+.traffic-board th {
+	font-size: 18px;
+	vertical-align: middle;
+}
+
+.traffic-canceled {
+	opacity: 0.45;
+	text-decoration: line-through;
+}
+
+.traffic-empty {
+	background-color: #fff;
+	border-radius: 8px;
+	color: #666;
+	font-size: 18px;
+	padding: 16px;
+}
+
+.traffic-attribution {
+	margin-top: 12px;
+	text-align: right;
+}
+
+@media (max-width: 900px) {
+	.forecast-strip,
+	.traffic-boards {
+		grid-template-columns: 1fr;
+	}
+}

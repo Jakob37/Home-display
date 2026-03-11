@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title_content %}
+<h1>Traffic</h1>
+{% endblock %}
+
+{% block main_content %}
+<div class="container-custom traffic-page">
+    {% if error %}
+    <div class="traffic-error">{{ error }}</div>
+    {% endif %}
+
+    {% for station in stations %}
+    <section class="traffic-station">
+        <div class="traffic-station-header">
+            <div>
+                <h2>{{ station.label }}</h2>
+                <div class="traffic-station-meta">
+                    {{ station.transport_mode }} | area {{ station.area_id }}
+                </div>
+            </div>
+            {% if station.updated_at %}
+            <div class="traffic-updated">
+                Updated {{ station.updated_at[11:16] }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="traffic-boards">
+            <div class="traffic-board">
+                <h3>Departures</h3>
+                {% if station.departures %}
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Line</th>
+                            <th>To</th>
+                            <th>Pl.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in station.departures %}
+                        <tr class="{% if entry.canceled %}traffic-canceled{% endif %}">
+                            <td>
+                                {{ entry.time }}
+                                {% if entry.minutes_until is not none %}
+                                <span class="traffic-minutes">({{ entry.minutes_until }}m)</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ entry.line }}</td>
+                            <td>{{ entry.headsign }}</td>
+                            <td>{{ entry.platform }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="traffic-empty">No departures in the next hour.</div>
+                {% endif %}
+            </div>
+
+            <div class="traffic-board">
+                <h3>Arrivals</h3>
+                {% if station.arrivals %}
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Line</th>
+                            <th>From</th>
+                            <th>Pl.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in station.arrivals %}
+                        <tr class="{% if entry.canceled %}traffic-canceled{% endif %}">
+                            <td>
+                                {{ entry.time }}
+                                {% if entry.minutes_until is not none %}
+                                <span class="traffic-minutes">({{ entry.minutes_until }}m)</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ entry.line }}</td>
+                            <td>{{ entry.headsign }}</td>
+                            <td>{{ entry.platform }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="traffic-empty">No arrivals in the next hour.</div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+
+    <div class="traffic-attribution">{{ attribution }}</div>
+</div>
+{% endblock %}

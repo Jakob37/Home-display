@@ -34,8 +34,7 @@ def _fetch_forecast(latitude: float, longitude: float) -> list[dict]:
     return data["properties"]["timeseries"]
 
 
-def get_temperature(latitude: float, longitude: float) -> float:
-    timeseries = _fetch_forecast(latitude, longitude)
+def _get_temperature_from_timeseries(timeseries: list[dict]) -> float:
     current_time = datetime.now().isoformat(timespec="hours")
     for entry in timeseries:
         time = entry["time"]
@@ -44,8 +43,7 @@ def get_temperature(latitude: float, longitude: float) -> float:
     raise ValueError(f"Current time not found: {current_time}")
 
 
-def get_long_term_forecast(latitude: float, longitude: float, days: int = 10) -> list[dict]:
-    timeseries = _fetch_forecast(latitude, longitude)
+def _build_long_term_forecast(timeseries: list[dict], days: int = 10) -> list[dict]:
     grouped: dict[str, list[dict]] = defaultdict(list)
 
     for entry in timeseries:
@@ -87,3 +85,23 @@ def get_long_term_forecast(latitude: float, longitude: float, days: int = 10) ->
             break
 
     return forecast
+
+
+def get_temperature(latitude: float, longitude: float) -> float:
+    timeseries = _fetch_forecast(latitude, longitude)
+    return _get_temperature_from_timeseries(timeseries)
+
+
+def get_long_term_forecast(latitude: float, longitude: float, days: int = 10) -> list[dict]:
+    timeseries = _fetch_forecast(latitude, longitude)
+    return _build_long_term_forecast(timeseries, days=days)
+
+
+def get_weather_snapshot(
+    latitude: float, longitude: float, days: int = 10
+) -> dict[str, float | list[dict]]:
+    timeseries = _fetch_forecast(latitude, longitude)
+    return {
+        "temperature": _get_temperature_from_timeseries(timeseries),
+        "long_term_forecast": _build_long_term_forecast(timeseries, days=days),
+    }

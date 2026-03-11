@@ -59,8 +59,34 @@
 
 
 <div>
-	{% for key, value in pollen.items() %}
-	<div style="font-size: 30px">{{key}}: {{value}}</div>
+	{% for key, pollen_entry in pollen.items() %}
+	<div class="pollen-row">
+		<div class="pollen-name">{{ key }}</div>
+		<div class="pollen-scale" aria-label="{{ key }} pollen level {{ pollen_entry.raw_level }}">
+			{% for level in range(1, 6) %}
+			<span
+				class="pollen-box pollen-box-{{ level }}{% if level <= pollen_entry.level %} is-active{% endif %}"
+				title="{{ pollen_entry.raw_level }}"
+				aria-hidden="true"
+			></span>
+			{% endfor %}
+		</div>
+	</div>
 	{% endfor %}
 </div>
+
+{% if long_term_forecast|length > 0 %}
+<div class="forecast-strip">
+	{% for entry in long_term_forecast %}
+	<div class="forecast-card">
+		<div class="forecast-day">{{ entry.weekday }}</div>
+		<div class="forecast-date">{{ entry.date[5:] }}</div>
+		<div class="forecast-icon">
+			<i class="fas {{ entry.icon }}" title="{{ entry.symbol }}" aria-label="{{ entry.symbol }}"></i>
+		</div>
+		<div class="forecast-temps">{{ entry.max_temp }}&deg; / {{ entry.min_temp }}&deg;</div>
+	</div>
+	{% endfor %}
+</div>
+{% endif %}
 {% endblock %}
