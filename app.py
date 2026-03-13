@@ -93,33 +93,53 @@ def _get_traffic_stop_config(prefix: str, default_label: str, default_mode: str)
     }
 
 
+def _traffic_setup_message(detail: str) -> str:
+    return f"Traffic board is unavailable. {detail}"
+
+
+def _get_traffic_api_keys() -> tuple[str, str]:
+    shared_api_key = config.get("traffic", "trafiklab_api_key", fallback="").strip()
+    static_api_key = config.get(
+        "traffic", "trafiklab_static_api_key", fallback=shared_api_key
+    ).strip()
+    realtime_api_key = config.get(
+        "traffic", "trafiklab_realtime_api_key", fallback=shared_api_key
+    ).strip()
+    return static_api_key, realtime_api_key
+
+
 def _get_traffic_page_data() -> dict:
     if not config.has_section("traffic"):
         return {
             "stations": [],
-            "error": "No [traffic] section configured yet.",
+            "error": _traffic_setup_message("Add a [traffic] section in app.config."),
             "attribution": "Data from Trafiklab.se",
         }
 
-    api_key = config.get("traffic", "trafiklab_api_key", fallback="").strip()
+    static_api_key, realtime_api_key = _get_traffic_api_keys()
     board_limit = config.getint("traffic", "board_limit", fallback=6)
+    stop_lookup_cache_hours = config.getint("traffic", "stop_lookup_cache_hours", fallback=24)
     stops = [
         _get_traffic_stop_config("train", "Train station", "TRAIN"),
         _get_traffic_stop_config("bus", "Bus station", "BUS"),
     ]
     configured_stops = [stop for stop in stops if stop is not None]
 
-    if not api_key:
+    if not realtime_api_key:
         return {
             "stations": [],
-            "error": "Missing trafiklab_api_key in [traffic] config.",
+            "error": _traffic_setup_message(
+                "Add `trafiklab_realtime_api_key` under `[traffic]` in `app.config`, or keep using `trafiklab_api_key` for both."
+            ),
             "attribution": "Data from Trafiklab.se",
         }
 
     if not configured_stops:
         return {
             "stations": [],
-            "error": "No traffic stops configured yet. Add train_area_id and/or bus_area_id in [traffic].",
+            "error": _traffic_setup_message(
+                "Add `train_area_id`/`train_query` and/or `bus_area_id`/`bus_query` in `[traffic]`."
+            ),
             "attribution": "Data from Trafiklab.se",
         }
 
@@ -130,9 +150,10 @@ def _get_traffic_page_data() -> dict:
             area_id = stop["area_id"]
             if not area_id:
                 matched_stop = resolve_stop_group(
-                    api_key=api_key,
+                    api_key=static_api_key or None,
                     search_value=stop["query"],
                     transport_mode=stop["transport_mode"],
+                    cache_ttl_hours=stop_lookup_cache_hours,
                 )
                 area_id = matched_stop["id"]
                 if not stop["label"]:
@@ -140,7 +161,7 @@ def _get_traffic_page_data() -> dict:
 
             stations.append(
                 get_station_timetables(
-                    api_key=api_key,
+                    api_key=realtime_api_key,
                     label=stop["label"],
                     area_id=area_id,
                     transport_mode=stop["transport_mode"],
