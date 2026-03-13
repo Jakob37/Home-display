@@ -68,27 +68,65 @@ body {
 	flex-grow: 1;
 }
 
+.weather-top-section {
+	display: grid;
+	gap: 14px;
+	padding-left: 10px;
+}
+
+.food-summary {
+	max-width: 420px;
+}
+
+.weather-summary-panel {
+	display: grid;
+	grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+	gap: 16px;
+	align-items: start;
+}
+
+.weather-summary-panel-pollen-only,
+.weather-summary-panel-icons-only {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.weather-icon-column {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	font-size: 64px;
+	text-align: center;
+}
+
+.pollen-column {
+	min-width: 0;
+}
+
 .pollen-row {
 	display: flex;
 	align-items: center;
-	gap: 16px;
-	font-size: 30px;
-	margin: 8px 0;
+	justify-content: space-between;
+	gap: 12px;
+	font-size: 24px;
+	margin: 6px 0;
 }
 
 .pollen-name {
-	min-width: 150px;
+	min-width: 110px;
 }
 
 .pollen-scale {
 	display: flex;
-	gap: 8px;
+	gap: 6px;
+	flex-shrink: 0;
 }
 
 .pollen-box {
-	width: 28px;
-	height: 28px;
-	border-radius: 6px;
+	width: 22px;
+	height: 22px;
+	border-radius: 5px;
 	opacity: 0.2;
 }
 
@@ -119,35 +157,43 @@ body {
 .forecast-strip {
 	display: grid;
 	grid-template-columns: repeat(7, minmax(0, 1fr));
-	gap: 12px;
-	margin-top: 18px;
+	gap: 8px;
+	margin-top: 14px;
 }
 
 .forecast-card {
 	background: linear-gradient(180deg, #f7f7f7 0%, #ececec 100%);
 	border-radius: 10px;
-	padding: 12px 8px;
+	padding: 8px 6px;
 	text-align: center;
 }
 
 .forecast-day {
-	font-size: 22px;
+	font-size: 18px;
 	font-weight: 700;
+	line-height: 1.1;
 }
 
 .forecast-date {
-	font-size: 16px;
+	font-size: 13px;
 	color: #555;
 }
 
 .forecast-icon {
-	font-size: 28px;
-	margin: 10px 0;
+	font-size: 18px;
+	margin: 6px 0;
 	color: #326891;
 }
 
 .forecast-temps {
-	font-size: 18px;
+	font-size: 15px;
+	line-height: 1.15;
+}
+
+.table-sm td .fas,
+.table-sm th .fas,
+.table-sm .fas {
+	font-size: 16px;
 }
 
 .traffic-page {
@@ -231,8 +277,67 @@ body {
 }
 
 @media (max-width: 900px) {
-	.forecast-strip,
+	.forecast-strip {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+
 	.traffic-boards {
 		grid-template-columns: 1fr;
+	}
+
+	.weather-summary-panel {
+		grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+		gap: 12px;
+	}
+
+	.weather-icon-column {
+		font-size: 52px;
+	}
+
+	.pollen-row {
+		font-size: 21px;
+	}
+
+	.pollen-name {
+		min-width: 90px;
+	}
+
+	.pollen-box {
+		width: 18px;
+		height: 18px;
+	}
+}
+
+@media (max-width: 600px) {
+	.forecast-strip {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.weather-summary-panel {
+		grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+		gap: 10px;
+	}
+
+	.weather-icon-column {
+		font-size: 44px;
+		gap: 8px;
+	}
+
+	.pollen-row {
+		font-size: 18px;
+		gap: 8px;
+	}
+
+	.pollen-name {
+		min-width: 72px;
+	}
+
+	.pollen-scale {
+		gap: 4px;
+	}
+
+	.pollen-box {
+		width: 16px;
+		height: 16px;
 	}
 }

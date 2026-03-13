@@ -30,9 +30,9 @@
     &#9733;&#9733;&#9733;&#9733;&#9733;
 </div> -->
 
-<div class="row" style="padding-left: 10px;">
+<div class="weather-top-section">
 	{% if enable_food_tracking and food_display|length > 0 %}
-	<div class="col-md-4 ml-3">
+	<div class="food-summary">
 		{% for day, food_entry in food_display.items() %}
 		<div class="row align-items-center">
 			<div class="col-md-3">
@@ -47,32 +47,37 @@
 		{% endfor %}
 	</div>
 	{% endif %}
-	{% if weather_icons|length > 0 %}
-	<div style="font-size: 90px; text-align: center;" class="col-md-8">
-		{% for weather_icon in weather_icons %}
-		<i style="color: {{ weather_icon.color }};" class="fas {{ weather_icon.icon }}"></i>
-		{% endfor %}
-	</div>
-	{% endif %}
-</div>
 
-
-
-<div>
-	{% for key, pollen_entry in pollen.items() %}
-	<div class="pollen-row">
-		<div class="pollen-name">{{ key }}</div>
-		<div class="pollen-scale" aria-label="{{ key }} pollen level {{ pollen_entry.raw_level }}">
-			{% for level in range(1, 6) %}
-			<span
-				class="pollen-box pollen-box-{{ level }}{% if level <= pollen_entry.level %} is-active{% endif %}"
-				title="{{ pollen_entry.raw_level }}"
-				aria-hidden="true"
-			></span>
+	{% if weather_icons|length > 0 or pollen|length > 0 %}
+	<div class="weather-summary-panel{% if weather_icons|length == 0 %} weather-summary-panel-pollen-only{% endif %}{% if pollen|length == 0 %} weather-summary-panel-icons-only{% endif %}">
+		{% if weather_icons|length > 0 %}
+		<div class="weather-icon-column">
+			{% for weather_icon in weather_icons %}
+			<i style="color: {{ weather_icon.color }};" class="fas {{ weather_icon.icon }}"></i>
 			{% endfor %}
 		</div>
+		{% endif %}
+
+		{% if pollen|length > 0 %}
+		<div class="pollen-column">
+			{% for key, pollen_entry in pollen.items() %}
+			<div class="pollen-row">
+				<div class="pollen-name">{{ key }}</div>
+				<div class="pollen-scale" aria-label="{{ key }} pollen level {{ pollen_entry.raw_level }}">
+					{% for level in range(1, 6) %}
+					<span
+						class="pollen-box pollen-box-{{ level }}{% if level <= pollen_entry.level %} is-active{% endif %}"
+						title="{{ pollen_entry.raw_level }}"
+						aria-hidden="true"
+					></span>
+					{% endfor %}
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+		{% endif %}
 	</div>
-	{% endfor %}
+	{% endif %}
 </div>
 
 {% if long_term_forecast|length > 0 %}
