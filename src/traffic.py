@@ -1,34 +1,107 @@
 #!/usr/bin/env python3
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib.parse import quote
 
 import requests
 
+from src.db.db import load_traffic_stop_cache, save_traffic_stop_cache
+
 
 TRAFIKLAB_BASE_URL = "https://realtime-api.trafiklab.se/v1"
+DEFAULT_STOP_LOOKUP_CACHE_HOURS = 24
 
 
 class TrafficApiError(Exception):
     pass
 
 
+def _raise_clean_api_error(
+    exc: requests.RequestException, config_hint: str = "Trafiklab API key"
+) -> None:
+    response = getattr(exc, "response", None)
+    if response is not None and response.status_code in {401, 403}:
+        raise TrafficApiError(
+            f"Traffic data is unavailable. Add a valid {config_hint} in app.config."
+        ) from exc
+    if isinstance(exc, requests.Timeout):
+        raise TrafficApiError("Traffic data is temporarily unavailable. Trafiklab timed out.") from exc
+    raise TrafficApiError("Traffic data is temporarily unavailable.") from exc
+
+
 def _normalize_stop_name(value: str) -> str:
     return " ".join(value.lower().split())
 
 
+def _get_stop_lookup_cache_key(search_value: str, transport_mode: str | None) -> str:
+    return f"{transport_mode or 'ANY'}::{_normalize_stop_name(search_value)}"
+
+
+def _get_cached_stop_group(
+    search_value: str, transport_mode: str | None, cache_ttl_hours: int
+) -> dict | None:
+    cache_key = _get_stop_lookup_cache_key(search_value, transport_mode)
+    cache_entry = load_traffic_stop_cache().get(cache_key)
+    if not isinstance(cache_entry, dict):
+        return None
+
+    cached_at = cache_entry.get("cached_at")
+    stop_group = cache_entry.get("stop_group")
+    if not cached_at or not isinstance(stop_group, dict):
+        return None
+
+    try:
+        cached_at_dt = datetime.fromisoformat(cached_at)
+    except ValueError:
+        return None
+
+    if datetime.now() - cached_at_dt > timedelta(hours=cache_ttl_hours):
+        return None
+
+    return stop_group
+
+
+def _cache_stop_group(search_value: str, transport_mode: str | None, stop_group: dict) -> None:
+    cache_entries = load_traffic_stop_cache()
+    cache_entries[_get_stop_lookup_cache_key(search_value, transport_mode)] = {
+        "cached_at": datetime.now().isoformat(),
+        "stop_group": stop_group,
+    }
+    save_traffic_stop_cache(cache_entries)
+
+
 def lookup_stop_groups(api_key: str, search_value: str) -> list[dict]:
-    response = requests.get(
-        f"{TRAFIKLAB_BASE_URL}/stops/name/{quote(search_value)}",
-        params={"key": api_key},
-        timeout=10,
-    )
-    response.raise_for_status()
+    try:
+        response = requests.get(
+            f"{TRAFIKLAB_BASE_URL}/stops/name/{quote(search_value)}",
+            params={"key": api_key},
+            timeout=10,
+        )
+        response.raise_for_status()
+    except requests.RequestException as exc:
+        _raise_clean_api_error(
+            exc, config_hint="`trafiklab_static_api_key` (or `trafiklab_api_key`)"
+        )
+
     payload = response.json()
     return payload.get("stop_groups", [])
 
 
-def resolve_stop_group(api_key: str, search_value: str, transport_mode: str | None = None) -> dict:
+def resolve_stop_group(
+    api_key: str | None,
+    search_value: str,
+    transport_mode: str | None = None,
+    cache_ttl_hours: int = DEFAULT_STOP_LOOKUP_CACHE_HOURS,
+) -> dict:
+    cached_stop_group = _get_cached_stop_group(search_value, transport_mode, cache_ttl_hours)
+    if cached_stop_group is not None:
+        return cached_stop_group
+
+    if not api_key:
+        raise TrafficApiError(
+            "Traffic data is unavailable. Add `trafiklab_static_api_key` or configure the exact `*_area_id` values."
+        )
+
     stop_groups = lookup_stop_groups(api_key, search_value)
     if transport_mode:
         stop_groups = [
@@ -51,7 +124,9 @@ def resolve_stop_group(api_key: str, search_value: str, transport_mode: str | No
             stop_group.get("average_daily_stop_times", 0),
         )
 
-    return max(stop_groups, key=score)
+    matched_stop_group = max(stop_groups, key=score)
+    _cache_stop_group(search_value, transport_mode, matched_stop_group)
+    return matched_stop_group
 
 
 def _fetch_timetable(api_key: str, area_id: str, direction: str) -> dict:
@@ -134,7 +209,9 @@ def get_station_timetables(
         departures_payload = _fetch_timetable(api_key, area_id, "departures")
         arrivals_payload = _fetch_timetable(api_key, area_id, "arrivals")
     except requests.RequestException as exc:
-        raise TrafficApiError(str(exc)) from exc
+        _raise_clean_api_error(
+            exc, config_hint="`trafiklab_realtime_api_key` (or `trafiklab_api_key`)"
+        )
 
     return {
         "label": label,
