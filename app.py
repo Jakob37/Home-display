@@ -16,7 +16,7 @@ from src.db.db import (
 )
 from src.traffic import TrafficApiError, get_station_timetables, resolve_stop_group
 from src.weather_request import WeatherApiError, get_weather_snapshot
-from src.pollen import get_pollen
+from src.pollen import get_pollen_snapshot
 
 app = Flask(__name__)
 
@@ -237,9 +237,13 @@ def index():
 
     if USE_LOCAL:
         pollen = {}
+        pollen_retrieved_at = None
         # pollen = {"Pollen 1": "A lot", "Pollen 2": "Not so much"}
     else:
-        pollen = get_pollen(config["pollen"]["city"])
+        pollen_snapshot = get_pollen_snapshot(config["pollen"]["city"])
+        pollen = pollen_snapshot["pollen"]
+        retrieved_at = pollen_snapshot["retrieved_at"]
+        pollen_retrieved_at = retrieved_at.strftime("%Y-%m-%d %H:%M") if retrieved_at else ""
     print(f"pollen {pollen}")
 
     weather_icons = get_weather_icons(lund_temperature) if lund_temperature is not None else []
@@ -258,6 +262,7 @@ def index():
         "my_date": my_date,
         "lund_temperature": lund_temperature,
         "pollen": pollen,
+        "pollen_retrieved_at": pollen_retrieved_at,
         "weather_icons": weather_icons,
         "food_display": food_selections,
         "long_term_forecast": long_term_forecast,

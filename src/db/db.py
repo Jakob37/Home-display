@@ -6,6 +6,7 @@ SELECTIONS_PATH = OUT_BASE / "selections.json"
 FOODS_PATH = OUT_BASE / "foods.json"
 FOOD_WEEKS_PATH = OUT_BASE / "food_weeks.json"
 TRAFFIC_STOP_CACHE_PATH = OUT_BASE / "traffic_stop_cache.json"
+POLLEN_CACHE_PATH = OUT_BASE / "pollen_cache.json"
 
 
 def save_json(json_dict: dict[str, any], path: Path):
@@ -58,4 +59,13 @@ def save_traffic_stop_cache(cache_entries: dict[str, any]) -> None:
 
 def load_traffic_stop_cache() -> dict[str, any]:
     cache_entries = load_json(TRAFFIC_STOP_CACHE_PATH)
+    return cache_entries if isinstance(cache_entries, dict) else {}
+
+
+def save_pollen_cache(cache_entries: dict[str, any]) -> None:
+    save_json(cache_entries, POLLEN_CACHE_PATH)
+
+
+def load_pollen_cache() -> dict[str, any]:
+    cache_entries = load_json(POLLEN_CACHE_PATH)
     return cache_entries if isinstance(cache_entries, dict) else {}

@@ -74,6 +74,9 @@
 				</div>
 			</div>
 			{% endfor %}
+			{% if pollen_retrieved_at %}
+			<div class="pollen-updated">Updated {{ pollen_retrieved_at }}</div>
+			{% endif %}
 		</div>
 		{% endif %}
 	</div>

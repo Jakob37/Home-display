@@ -104,6 +104,13 @@ body {
 	min-width: 0;
 }
 
+.pollen-updated {
+	color: #666;
+	font-size: 13px;
+	margin-top: 10px;
+	text-align: right;
+}
+
 .pollen-row {
 	display: flex;
 	align-items: center;
