@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
 
 {% block title_content %}
-<h1>Long-term forecast</h1>
+<h1>7-day forecast</h1>
 {% endblock %}
 
 {% block main_content %}
 <div class="container-custom">
+    {% if weather_error %}
+    <div class="weather-error">{{ weather_error }}</div>
+    {% endif %}
+
+    {% if long_term_forecast %}
     <table class="table table-striped table-sm">
         <thead>
             <tr>
@@ -30,5 +35,8 @@
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+    <div class="weather-empty">No daily forecast is available right now.</div>
+    {% endif %}
 </div>
 {% endblock %}

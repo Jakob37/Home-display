@@ -11,7 +11,7 @@
 		<span hx-get="/clock" hx-trigger="every 1s" hx-swap="innerHTML">
 			Loading...
 		</span>
-		&nbsp;{{ lund_temperature }}&deg;C
+		&nbsp;{% if lund_temperature is not none %}{{ lund_temperature }}&deg;C{% else %}--&deg;C{% endif %}
 	</h1>
 </span>
 {% endblock %}
@@ -79,6 +79,10 @@
 	</div>
 	{% endif %}
 </div>
+
+{% if weather_error %}
+<div class="weather-error">{{ weather_error }}</div>
+{% endif %}
 
 {% if long_term_forecast|length > 0 %}
 <div class="forecast-strip">

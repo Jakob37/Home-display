@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
+import configparser
+import datetime
+
 from flask import Flask, abort, redirect, render_template, jsonify, request, url_for
+
 from src.constants import COLORS, DAYS, ICONS
 from src.db.db import (
     load_food_weeks,
@@ -11,13 +15,10 @@ from src.db.db import (
     save_selections,
 )
 from src.traffic import TrafficApiError, get_station_timetables, resolve_stop_group
-from src.weather_request import get_long_term_forecast, get_weather_snapshot
+from src.weather_request import WeatherApiError, get_weather_snapshot
 from src.pollen import get_pollen
-import datetime
 
 app = Flask(__name__)
-import datetime
-import configparser
 
 config = configparser.ConfigParser()
 config.read("app.config")
@@ -29,6 +30,7 @@ USE_LOCAL = False
 DEBUG_MODE = True
 DEBUG_TEMP = 3
 ENABLE_FOOD_TRACKING = False
+DEFAULT_FORECAST_DAYS = 7
 
 
 class WeatherIcon:
@@ -60,6 +62,48 @@ def get_weather_icons(temperature: int) -> str:
         weather_icons.append(WeatherIcon(ICONS.temperature_high, COLORS.red))
 
     return weather_icons
+
+
+def _build_debug_forecast(days: int) -> list[dict]:
+    today = datetime.date.today()
+    return [
+        {
+            "date": (today + datetime.timedelta(days=i)).isoformat(),
+            "weekday": (today + datetime.timedelta(days=i)).strftime("%a"),
+            "min_temp": DEBUG_TEMP - 2,
+            "max_temp": DEBUG_TEMP + 2,
+            "symbol": "partly cloudy",
+            "icon": "fa-cloud-sun",
+        }
+        for i in range(days)
+    ]
+
+
+def _get_weather_page_data(days: int = DEFAULT_FORECAST_DAYS) -> dict:
+    if USE_LOCAL:
+        return {
+            "temperature": DEBUG_TEMP,
+            "long_term_forecast": _build_debug_forecast(days),
+            "error": "",
+        }
+
+    lund_lat = float(config["weather"]["lat"])
+    lund_long = float(config["weather"]["long"])
+
+    try:
+        weather_snapshot = get_weather_snapshot(lund_lat, lund_long, days=days)
+    except WeatherApiError as exc:
+        return {
+            "temperature": None,
+            "long_term_forecast": [],
+            "error": str(exc),
+        }
+
+    return {
+        "temperature": round(weather_snapshot["temperature"]),
+        "long_term_forecast": weather_snapshot["long_term_forecast"],
+        "error": "",
+    }
 
 
 def require_food_tracking_enabled() -> None:
@@ -186,26 +230,10 @@ def index():
 
     my_clock = str(datetime.datetime.now().strftime("%H:%M"))
     my_date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
-    lund_lat = config["weather"]["lat"]
-    lund_long = config["weather"]["long"]
-
-    if USE_LOCAL:
-        lund_temperature = DEBUG_TEMP
-        long_term_forecast = [
-            {
-                "date": (datetime.date.today() + datetime.timedelta(days=i)).isoformat(),
-                "weekday": (datetime.date.today() + datetime.timedelta(days=i)).strftime("%a"),
-                "min_temp": DEBUG_TEMP - 2,
-                "max_temp": DEBUG_TEMP + 2,
-                "symbol": "partly cloudy",
-                "icon": "fa-cloud-sun",
-            }
-            for i in range(7)
-        ]
-    else:
-        weather_snapshot = get_weather_snapshot(float(lund_lat), float(lund_long), days=7)
-        lund_temperature = round(weather_snapshot["temperature"])
-        long_term_forecast = weather_snapshot["long_term_forecast"]
+    weather_data = _get_weather_page_data(days=DEFAULT_FORECAST_DAYS)
+    lund_temperature = weather_data["temperature"]
+    long_term_forecast = weather_data["long_term_forecast"]
+    weather_error = weather_data["error"]
 
     if USE_LOCAL:
         pollen = {}
@@ -214,7 +242,7 @@ def index():
         pollen = get_pollen(config["pollen"]["city"])
     print(f"pollen {pollen}")
 
-    weather_icons = get_weather_icons(lund_temperature)
+    weather_icons = get_weather_icons(lund_temperature) if lund_temperature is not None else []
 
     food_selections = {}
     if ENABLE_FOOD_TRACKING:
@@ -233,6 +261,7 @@ def index():
         "weather_icons": weather_icons,
         "food_display": food_selections,
         "long_term_forecast": long_term_forecast,
+        "weather_error": weather_error,
     }
 
     return render_template("weather.html", **data)
@@ -240,27 +269,12 @@ def index():
 
 @app.route("/weather/long-term")
 def weather_long_term():
-    if USE_LOCAL:
-        today = datetime.date.today()
-        long_term_forecast = [
-            {
-                "date": (today + datetime.timedelta(days=i)).isoformat(),
-                "weekday": (today + datetime.timedelta(days=i)).strftime("%a"),
-                "min_temp": DEBUG_TEMP - 2,
-                "max_temp": DEBUG_TEMP + 2,
-                "symbol": "partly cloudy",
-                "icon": "fa-cloud-sun",
-            }
-            for i in range(10)
-        ]
-    else:
-        lund_lat = config["weather"]["lat"]
-        lund_long = config["weather"]["long"]
-        long_term_forecast = get_long_term_forecast(lund_lat, lund_long)
+    weather_data = _get_weather_page_data(days=DEFAULT_FORECAST_DAYS)
     return render_template(
         "long_term_weather.html",
-        title="Long-term forecast",
-        long_term_forecast=long_term_forecast,
+        title="7-day forecast",
+        long_term_forecast=weather_data["long_term_forecast"],
+        weather_error=weather_data["error"],
     )
 
 
