@@ -14,7 +14,7 @@ POLLEN_LEVEL_KEYWORDS = (
     (0, ("ingen", "none")),
 )
 REQUEST_TIMEOUT_SECONDS = 10
-POLLEN_CACHE_TTL = timedelta(hours=24)
+POLLEN_CACHE_TTL = timedelta(hours=6)
 
 
 def parse_pollen_level(amount: str) -> int:
@@ -77,7 +77,12 @@ def _fetch_pollen(city: str) -> dict[str, dict[str, str | int]]:
     response.raise_for_status()
 
     soup = BeautifulSoup(response.content, "html.parser")
-    pollen_items = soup.find_all(class_="pollen-city__item")
+    active_day = soup.select_one(".pollen-city__day.active")
+    if active_day is None:
+        active_day = soup.select_one('.pollen-city__day[data-day="0"]')
+
+    pollen_scope = active_day if active_day is not None else soup
+    pollen_items = pollen_scope.find_all(class_="pollen-city__item")
     pollen_dict: dict[str, dict[str, str | int]] = {}
 
     for pollen_item in pollen_items:
@@ -88,9 +93,15 @@ def _fetch_pollen(city: str) -> dict[str, dict[str, str | int]]:
 
         plant = plant_node.get_text(strip=True)
         pollen_amount = level_node.get_text(strip=True)
+        raw_level = pollen_item.get("data-level")
+        try:
+            pollen_level = max(0, min(int(str(raw_level)), 5))
+        except (TypeError, ValueError):
+            pollen_level = parse_pollen_level(pollen_amount)
+
         pollen_dict[plant] = {
             "raw_level": pollen_amount,
-            "level": parse_pollen_level(pollen_amount),
+            "level": pollen_level,
         }
 
     if not pollen_dict:
