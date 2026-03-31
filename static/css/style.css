@@ -230,6 +230,55 @@ body {
 	padding-bottom: 24px;
 }
 
+.radar-page {
+	padding: 0 10px 24px;
+}
+
+.radar-toolbar {
+	display: grid;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.radar-toolbar-group {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.radar-chip {
+	background: #ececec;
+	border-radius: 999px;
+	color: #333;
+	padding: 8px 12px;
+	text-decoration: none;
+	text-transform: capitalize;
+}
+
+.radar-chip.is-active {
+	background: #2c5f88;
+	color: #fff;
+}
+
+.radar-card {
+	background: linear-gradient(180deg, #fbfbfb 0%, #f0f0f0 100%);
+	border-radius: 12px;
+	overflow: hidden;
+	padding: 12px;
+}
+
+.radar-image {
+	display: block;
+	height: auto;
+	width: 100%;
+}
+
+.radar-meta {
+	color: #666;
+	font-size: 14px;
+	margin-top: 12px;
+}
+
 .traffic-error {
 	background-color: #f8d7da;
 	border-radius: 8px;
@@ -321,6 +370,10 @@ body {
 
 	.traffic-boards {
 		grid-template-columns: 1fr;
+	}
+
+	.radar-toolbar-group {
+		gap: 6px;
 	}
 
 	.weather-summary-panel {

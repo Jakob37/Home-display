@@ -2,6 +2,7 @@
 
 import configparser
 import datetime
+from urllib.parse import urlencode
 
 from flask import Flask, abort, redirect, render_template, jsonify, request, url_for
 
@@ -31,6 +32,32 @@ DEBUG_MODE = True
 DEBUG_TEMP = 3
 ENABLE_FOOD_TRACKING = False
 DEFAULT_FORECAST_DAYS = 7
+DEFAULT_RADAR_AREA = "nordic"
+DEFAULT_RADAR_TYPE = "reflectivity"
+RADAR_ALLOWED_AREAS = (
+    "central_norway",
+    "eastern_norway",
+    "finnmark",
+    "nordic",
+    "nordland",
+    "northern_nordland",
+    "northwestern_norway",
+    "norway",
+    "southeastern_norway",
+    "southern_nordland",
+    "southern_norway",
+    "southwestern_norway",
+    "troms",
+    "western_norway",
+    "xband",
+)
+RADAR_ALLOWED_TYPES = (
+    "5level_reflectivity",
+    "fir_preciptype",
+    "lx_reflectivity",
+    "preciptype",
+    "reflectivity",
+)
 
 
 class WeatherIcon:
@@ -109,6 +136,32 @@ def _get_weather_page_data(days: int = DEFAULT_FORECAST_DAYS) -> dict:
 def require_food_tracking_enabled() -> None:
     if not ENABLE_FOOD_TRACKING:
         abort(404)
+
+
+def _get_radar_page_data() -> dict:
+    area = request.args.get("area", DEFAULT_RADAR_AREA).strip().lower()
+    radar_type = request.args.get("type", DEFAULT_RADAR_TYPE).strip().lower()
+
+    if area not in RADAR_ALLOWED_AREAS:
+        area = DEFAULT_RADAR_AREA
+    if radar_type not in RADAR_ALLOWED_TYPES:
+        radar_type = DEFAULT_RADAR_TYPE
+
+    radar_url = "https://api.met.no/weatherapi/radar/2.0/?" + urlencode(
+        {
+            "area": area,
+            "type": radar_type,
+            "content": "animation",
+        }
+    )
+
+    return {
+        "radar_url": radar_url,
+        "area": area,
+        "radar_type": radar_type,
+        "radar_areas": RADAR_ALLOWED_AREAS,
+        "radar_types": RADAR_ALLOWED_TYPES,
+    }
 
 
 @app.context_processor
@@ -280,6 +333,16 @@ def weather_long_term():
         title="7-day forecast",
         long_term_forecast=weather_data["long_term_forecast"],
         weather_error=weather_data["error"],
+    )
+
+
+@app.route("/weather/radar")
+def weather_radar():
+    radar_data = _get_radar_page_data()
+    return render_template(
+        "weather_radar.html",
+        title="Rain radar",
+        **radar_data,
     )
 
 

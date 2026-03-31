@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block head_content %}
+<meta http-equiv="refresh" content="600" />
+{% endblock %}
+
+{% block title_content %}
+<h1>Rain radar</h1>
+{% endblock %}
+
+{% block main_content %}
+<div class="radar-page">
+	<div class="radar-toolbar">
+		<div class="radar-toolbar-group">
+			{% for radar_area in radar_areas %}
+			<a
+				href="{{ url_for('weather_radar', area=radar_area, type=radar_type) }}"
+				class="radar-chip{% if radar_area == area %} is-active{% endif %}"
+			>
+				{{ radar_area.replace('_', ' ') }}
+			</a>
+			{% endfor %}
+		</div>
+		<div class="radar-toolbar-group">
+			{% for current_type in radar_types %}
+			<a
+				href="{{ url_for('weather_radar', area=area, type=current_type) }}"
+				class="radar-chip{% if current_type == radar_type %} is-active{% endif %}"
+			>
+				{{ current_type.replace('_', ' ') }}
+			</a>
+			{% endfor %}
+		</div>
+	</div>
+
+	<div class="radar-card">
+		<img
+			src="{{ radar_url }}"
+			alt="Animated rain radar for {{ area.replace('_', ' ') }}"
+			class="radar-image"
+		>
+	</div>
+
+	<p class="radar-meta">
+		Source: MET Radar 2.0 animated GIF. Area {{ area.replace('_', ' ') }}, layer {{ radar_type.replace('_', ' ') }}.
+	</p>
+</div>
+{% endblock %}
