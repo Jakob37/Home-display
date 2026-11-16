@@ -2,6 +2,8 @@
 
 import configparser
 import datetime
+import os
+from pathlib import Path
 from urllib.parse import urlencode
 
 from flask import Flask, abort, redirect, render_template, jsonify, request, url_for
@@ -20,6 +22,30 @@ from src.weather_request import WeatherApiError, get_weather_snapshot
 from src.pollen import get_pollen_snapshot
 
 app = Flask(__name__)
+DEV_RELOAD = os.environ.get("HOME_DISPLAY_DEV") == "1"
+if DEV_RELOAD:
+    app.config.update(TEMPLATES_AUTO_RELOAD=True, SEND_FILE_MAX_AGE_DEFAULT=0)
+
+
+@app.context_processor
+def development_context():
+    return {"dev_reload": DEV_RELOAD}
+
+
+@app.get("/_dev/revision")
+def development_revision():
+    if not DEV_RELOAD:
+        abort(404)
+    root = Path(app.root_path)
+    files = [root / "app.py"]
+    for directory in ("src", "templates", "static"):
+        files.extend(p for p in (root / directory).rglob("*")
+                     if p.suffix in {".py", ".html", ".css", ".js"})
+    response = jsonify(revision="|".join(
+        f"{p.relative_to(root)}:{p.stat().st_mtime_ns}" for p in sorted(files)
+    ))
+    response.headers["Cache-Control"] = "no-store"
+    return response
 
 config = configparser.ConfigParser()
 config.read("app.config")
@@ -485,4 +511,4 @@ def eating_page():
 
 
 if __name__ == "__main__":
-    app.run(debug=DEBUG_MODE)
+    app.run(debug=DEBUG_MODE, use_reloader=DEV_RELOAD or DEBUG_MODE)

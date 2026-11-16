@@ -43,6 +43,22 @@
 
         {% endblock %}
     </div>
+    {% if dev_reload %}
+    <script>
+        let developmentRevision;
+        setInterval(async () => {
+            try {
+                const response = await fetch('/_dev/revision', {cache: 'no-store'});
+                if (!response.ok) return;
+                const {revision} = await response.json();
+                if (developmentRevision !== undefined && revision !== developmentRevision) {
+                    window.location.reload();
+                }
+                developmentRevision = revision;
+            } catch (_) { /* Retry after the development server restarts. */ }
+        }, 2000);
+    </script>
+    {% endif %}
 </body>
 
 </html>

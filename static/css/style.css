@@ -3,14 +3,26 @@ body {
 }
 
 #smhi {
-	width: "100%";
-	height: "300px";
+	width: 98%;
+	aspect-ratio: 782 / 306;
+	position: relative;
 	overflow: hidden;
 }
 
 #smhi img {
-	margin-top: -140px;
-	margin-bottom: -40px;
+	position: absolute;
+	width: 100%;
+	height: auto;
+	left: 0;
+	top: 0;
+	/* Remove the first 85 pixels of the 391-pixel source image. */
+	transform: translateY(-21.73913%);
+}
+
+.meteogram-attribution {
+	font-size: 12px;
+	text-align: right;
+	width: 98%;
 }
 
 .header {
@@ -439,10 +451,4 @@ body {
 		width: 16px;
 		height: 16px;
 	}
-}
-/* Hide the location heading embedded in YR's 782 x 391 meteogram.
-   Keep the attribution above it and the forecast chart below it visible. */
-.weather-meteogram img {
-    -webkit-mask-image: linear-gradient(to bottom, black 0% 12.3%, transparent 12.3% 21.7%, black 21.7% 100%);
-    mask-image: linear-gradient(to bottom, black 0% 12.3%, transparent 12.3% 21.7%, black 21.7% 100%);
 }

@@ -8,6 +8,12 @@ Raspberry pi based node for a home display.
 
 Open `http://127.0.0.1:5000/` in a browser.
 
+For development, run `. ./env.sh` before starting the server. This enables
+Python process reloading, immediate template updates, and browser refresh within
+about two seconds after Python, HTML, CSS, or JavaScript changes. It also disables
+static asset caching. Restart the server once when first enabling this mode.
+For normal display use, unset `HOME_DISPLAY_DEV` before starting the app.
+
 ## Traffic View
 
 The `/traffic` page can show live departures and arrivals for one configured train station and one configured bus station.
