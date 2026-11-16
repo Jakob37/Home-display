@@ -7,17 +7,15 @@
         return;
     }
 
-    const map = L.map('radar-map', {maxZoom: 7}).setView([56.2, 14.0], 7);
+    const map = L.map('radar-map', {maxZoom: 10}).setView([56.2, 14.0], 8);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 7,
+        maxZoom: 10,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · <a href="https://www.rainviewer.com/">RainViewer</a>'
     }).addTo(map);
     L.circleMarker([55.705, 13.191], {
-        radius: 7, color: '#fff', weight: 2,
+        radius: 10, color: '#fff', weight: 2,
         fillColor: '#e11919', fillOpacity: 1
-    }).addTo(map).bindTooltip('Lund', {
-        permanent: true, direction: 'right', className: 'lund-label'
-    });
+    }).addTo(map);
 
     let layers = [];
     let frame = 0;
@@ -50,7 +48,7 @@
             const nextLayers = frames.map(item => ({
                 time: item.time,
                 layer: L.tileLayer(`${host.origin}${item.path}/256/{z}/{x}/{y}/2/1_1.png`, {
-                    maxZoom: 7, opacity: 0, zIndex: 300
+                    maxNativeZoom: 7, maxZoom: 10, opacity: 0, zIndex: 300
                 })
             }));
             layers.forEach(item => map.removeLayer(item.layer));
