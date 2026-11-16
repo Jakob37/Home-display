@@ -204,7 +204,7 @@ body {
 
 .weather-radar-preview {
 	grid-area: radar;
-	margin: 0;
+	margin: 24px 0 0;
 	text-align: right;
 	min-width: 0;
 }
