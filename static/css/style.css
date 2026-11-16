@@ -194,12 +194,25 @@ body {
 .weather-daily-section {
 	grid-area: forecast;
 	min-width: 0;
+	align-self: stretch;
 }
 
 .forecast-list {
+	display: grid;
+	grid-auto-rows: minmax(56px, 1fr);
+	height: 100%;
 	list-style: none;
 	margin: 0;
 	padding: 0 0 0 24px;
+}
+
+.secret-message {
+	margin: 24px 0 0;
+	text-align: center;
+	font-size: clamp(24px, 2.4vw, 40px);
+	font-weight: 800;
+	line-height: 1.2;
+	color: #2c5f88;
 }
 
 .weather-radar-preview {
@@ -256,10 +269,10 @@ body {
 }
 
 .forecast-row {
-	min-height: 48px;
+	min-height: 56px;
 	padding: 6px 0;
 	display: grid;
-	grid-template-columns: 62px 66px 44px minmax(0, 1fr);
+	grid-template-columns: 72px 72px 44px minmax(0, 1fr);
 	grid-template-areas: "day date icon temps";
 	gap: 8px;
 	align-items: center;
@@ -267,14 +280,14 @@ body {
 
 .forecast-day {
 	grid-area: day;
-	font-size: 28px;
+	font-size: 36px;
 	font-weight: 700;
 	line-height: 1.05;
 }
 
 .forecast-date {
 	grid-area: date;
-	font-size: 22px;
+	font-size: 28px;
 	color: #555;
 	line-height: 1.05;
 }
@@ -289,7 +302,7 @@ body {
 
 .forecast-temps {
 	grid-area: temps;
-	font-size: 28px;
+	font-size: 36px;
 	font-weight: 700;
 	letter-spacing: -0.02em;
 	line-height: 1.05;
@@ -436,7 +449,7 @@ body {
 	}
 
 	.forecast-temps {
-		font-size: 28px;
+		font-size: 36px;
 	}
 
 	.traffic-boards {
