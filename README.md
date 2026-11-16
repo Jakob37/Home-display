@@ -31,3 +31,5 @@ Trafiklab docs:
 ## Feature Flags
 
 Food tracking is currently disabled. To enable it, set `ENABLE_FOOD_TRACKING = True` in `app.py`.
+
+The pollen indicator is temporarily hidden. Set `ENABLE_POLLEN = True` in `app.py` to restore it.

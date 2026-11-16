@@ -57,6 +57,7 @@ USE_LOCAL = False
 DEBUG_MODE = True
 DEBUG_TEMP = 3
 ENABLE_FOOD_TRACKING = False
+ENABLE_POLLEN = False
 DEFAULT_FORECAST_DAYS = 7
 DEFAULT_RADAR_AREA = "nordic"
 DEFAULT_RADAR_TYPE = "reflectivity"
@@ -314,7 +315,7 @@ def index():
     long_term_forecast = weather_data["long_term_forecast"]
     weather_error = weather_data["error"]
 
-    if USE_LOCAL:
+    if USE_LOCAL or not ENABLE_POLLEN:
         pollen = {}
         pollen_retrieved_at = None
         # pollen = {"Pollen 1": "A lot", "Pollen 2": "Not so much"}
