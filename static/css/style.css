@@ -256,10 +256,10 @@ body {
 }
 
 .forecast-row {
-	min-height: 40px;
-	padding: 5px 0;
+	min-height: 48px;
+	padding: 6px 0;
 	display: grid;
-	grid-template-columns: 34px 38px 40px 1fr;
+	grid-template-columns: 62px 66px 44px minmax(0, 1fr);
 	grid-template-areas: "day date icon temps";
 	gap: 8px;
 	align-items: center;
@@ -267,14 +267,14 @@ body {
 
 .forecast-day {
 	grid-area: day;
-	font-size: 14px;
+	font-size: 28px;
 	font-weight: 700;
 	line-height: 1.05;
 }
 
 .forecast-date {
 	grid-area: date;
-	font-size: 10px;
+	font-size: 22px;
 	color: #555;
 	line-height: 1.05;
 }
@@ -289,7 +289,7 @@ body {
 
 .forecast-temps {
 	grid-area: temps;
-	font-size: 14px;
+	font-size: 28px;
 	font-weight: 700;
 	letter-spacing: -0.02em;
 	line-height: 1.05;
@@ -436,7 +436,7 @@ body {
 	}
 
 	.forecast-temps {
-		font-size: 14px;
+		font-size: 28px;
 	}
 
 	.traffic-boards {
@@ -471,12 +471,24 @@ body {
 }
 
 @media (max-width: 600px) {
+	.forecast-row {
+		grid-template-columns: 50px 55px 36px minmax(0, 1fr);
+	}
+
+	.forecast-day {
+		font-size: 24px;
+	}
+
+	.forecast-date {
+		font-size: 18px;
+	}
+
 	.forecast-icon {
 		font-size: 28px;
 	}
 
 	.forecast-temps {
-		font-size: 14px;
+		font-size: 24px;
 	}
 
 	.weather-summary-panel {
