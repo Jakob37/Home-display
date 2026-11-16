@@ -84,18 +84,27 @@
 <div class="weather-error">{{ weather_error }}</div>
 {% endif %}
 
+<div class="weather-bottom-section">
 {% if long_term_forecast|length > 0 %}
-<div class="forecast-strip">
+<ul class="forecast-list" aria-label="Seven-day forecast">
 	{% for entry in long_term_forecast %}
-	<div class="forecast-card">
+	<li class="forecast-row">
 		<div class="forecast-day">{{ entry.weekday }}</div>
 		<div class="forecast-date">{{ entry.date[5:] }}</div>
 		<div class="forecast-icon">
 			<i class="fas {{ entry.icon }}" title="{{ entry.symbol }}" aria-label="{{ entry.symbol }}"></i>
 		</div>
 		<div class="forecast-temps">{{ entry.max_temp }}&deg; / {{ entry.min_temp }}&deg;</div>
-	</div>
+	</li>
 	{% endfor %}
-</div>
+</ul>
 {% endif %}
+<figure class="weather-radar-preview">
+	<a href="{{ url_for('weather_radar', area=area, type=radar_type) }}" aria-label="Open rain radar">
+		<img src="{{ radar_url }}" alt="Animated rain radar for {{ area.replace('_', ' ') }}" onerror="this.hidden = true; this.closest('figure').querySelector('.radar-preview-error').hidden = false;">
+	</a>
+	<p class="radar-preview-error" hidden>Radar image unavailable. <a href="{{ url_for('weather_radar') }}">Open rain radar</a></p>
+	<figcaption>Rain radar · MET Norway · <a href="{{ url_for('weather_radar', area=area, type=radar_type) }}">Expand</a></figcaption>
+</figure>
+</div>
 {% endblock %}

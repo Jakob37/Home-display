@@ -356,7 +356,7 @@ def index():
         "weather_error": weather_error,
     }
 
-    return render_template("weather.html", **data)
+    return render_template("weather.html", **data, **_get_radar_page_data())
 
 
 @app.route("/weather/long-term")
