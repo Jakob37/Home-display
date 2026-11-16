@@ -4,7 +4,7 @@ body {
 
 #smhi {
 	width: 98%;
-	aspect-ratio: 782 / 306;
+	aspect-ratio: 782 / 244.8;
 	position: relative;
 	overflow: hidden;
 }
@@ -15,8 +15,9 @@ body {
 	height: auto;
 	left: 0;
 	top: 0;
-	/* Remove the first 85 pixels of the 391-pixel source image. */
-	transform: translateY(-21.73913%);
+	/* Compress the chart vertically by 20%, keeping the title cropped out. */
+	transform-origin: top center;
+	transform: scaleY(0.8) translateY(-21.73913%);
 }
 
 .meteogram-attribution {
