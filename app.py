@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 from urllib.parse import urlencode
 
-from flask import Flask, abort, redirect, render_template, jsonify, request, url_for
+from flask import Flask, Response, abort, redirect, render_template, jsonify, request, url_for
 
 from src.constants import COLORS, DAYS, ICONS
 from src.db.db import (
@@ -20,6 +20,7 @@ from src.db.db import (
 from src.traffic import TrafficApiError, get_station_timetables, resolve_stop_group
 from src.weather_request import WeatherApiError, get_weather_snapshot
 from src.pollen import get_pollen_snapshot
+from src.meteogram import readable_meteogram
 
 app = Flask(__name__)
 DEV_RELOAD = os.environ.get("HOME_DISPLAY_DEV") == "1"
@@ -194,6 +195,12 @@ def _get_radar_page_data() -> dict:
 @app.context_processor
 def inject_feature_flags():
     return {"enable_food_tracking": ENABLE_FOOD_TRACKING}
+
+
+@app.get("/weather/meteogram.svg")
+def meteogram_image():
+    local_path = Path(app.static_folder) / "assets/meteogram.svg" if USE_LOCAL else None
+    return Response(readable_meteogram(local_path), mimetype="image/svg+xml")
 
 
 def _get_traffic_stop_config(prefix: str, default_label: str, default_mode: str) -> dict | None:
