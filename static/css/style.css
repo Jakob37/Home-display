@@ -4,7 +4,7 @@ body {
 
 #smhi {
 	width: 100%;
-	aspect-ratio: 782 / 183.6;
+	aspect-ratio: 782 / 214.2;
 	position: relative;
 	overflow: hidden;
 }
@@ -15,9 +15,9 @@ body {
 	height: auto;
 	left: 0;
 	top: 0;
-	/* Compress geometry by 40%; the SVG compensates its text separately. */
+	/* Compress geometry by 30%; the SVG compensates its text separately. */
 	transform-origin: top center;
-	transform: scaleY(0.6) translateY(-21.73913%);
+	transform: scaleY(0.7) translateY(-21.73913%);
 }
 
 .meteogram-attribution {
