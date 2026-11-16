@@ -21,7 +21,10 @@
 <div class="weather-dashboard">
 <section class="weather-chart-section" aria-label="Hourly forecast">
 <div id="smhi" class="weather-meteogram">
+	<picture>
+	<source media="(min-height: 1000px) and (min-width: 801px)" srcset="{{ url_for('meteogram_image', tall=1) }}">
 	<img src="{{ url_for('meteogram_image') }}" alt="Hourly weather forecast from YR" width="98%" height="auto">
+	</picture>
 </div>
 <div class="meteogram-attribution"><a href="https://www.yr.no/en/forecast/daily-table/2-2693678/">Forecast by YR</a></div>
 

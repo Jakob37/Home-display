@@ -201,7 +201,8 @@ def inject_feature_flags():
 @app.get("/weather/meteogram.svg")
 def meteogram_image():
     local_path = Path(app.static_folder) / "assets/meteogram.svg" if USE_LOCAL else None
-    return Response(readable_meteogram(local_path), mimetype="image/svg+xml")
+    vertical_scale = 1.15 if request.args.get("tall") == "1" else 1.0
+    return Response(readable_meteogram(local_path, vertical_scale), mimetype="image/svg+xml")
 
 
 @app.get("/weather/local-radar")

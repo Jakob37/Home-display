@@ -4,7 +4,8 @@ body {
 
 #smhi {
 	width: 100%;
-	aspect-ratio: 782 / 214.2;
+	--chart-stretch: 1;
+	aspect-ratio: 782 / 306;
 	position: relative;
 	overflow: hidden;
 }
@@ -15,9 +16,16 @@ body {
 	height: auto;
 	left: 0;
 	top: 0;
-	/* Compress geometry by 30%; the SVG compensates its text separately. */
+	/* Match the SVG label compensation to the viewport's chart height. */
 	transform-origin: top center;
-	transform: scaleY(0.7) translateY(-21.73913%);
+	transform: scaleY(var(--chart-stretch)) translateY(-21.73913%);
+}
+
+@media (min-height: 1000px) and (min-width: 801px) {
+	#smhi {
+		--chart-stretch: 1.15;
+		aspect-ratio: 782 / 351.9;
+	}
 }
 
 .meteogram-attribution {
