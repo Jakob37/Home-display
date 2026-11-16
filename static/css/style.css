@@ -178,7 +178,7 @@ body {
 
 .weather-dashboard {
 	display: grid;
-	grid-template-columns: minmax(230px, 0.8fr) minmax(110px, 0.4fr) minmax(0, 1.6fr);
+	grid-template-columns: minmax(230px, 1.5fr) minmax(110px, 0.5fr) minmax(0, 0.8fr);
 	grid-template-rows: auto 1fr;
 	grid-template-areas: "chart chart radar" "forecast icons radar";
 	gap: 16px;

@@ -187,11 +187,12 @@ def _get_radar_page_data() -> dict:
         "radar_url": radar_url,
         "radar_embed_url": "https://embed.windy.com/embed.html?" + urlencode({
             "type": "map", "location": "coordinates",
-            "lat": config.get("weather", "lat", fallback="55.705"),
-            "lon": config.get("weather", "long", fallback="13.191"),
+            # Center north of Lund to include more of Sweden above Skåne.
+            "lat": 57.5,
+            "lon": 14.0,
             "zoom": 7, "overlay": "radar", "product": "radar",
             "level": "surface", "metricRain": "mm", "metricTemp": "°C",
-            "metricWind": "m/s", "marker": "true",
+            "metricWind": "m/s",
         }),
         "area": area,
         "radar_type": radar_type,
