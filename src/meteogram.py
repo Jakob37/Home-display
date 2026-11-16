@@ -24,7 +24,7 @@ def readable_meteogram(local_path=None):
             if "location-header" in child.get("class", "").split():
                 parent.remove(child)
     # The page scales the image to 60% height. Inverse-scale only the text,
-    # around each label's own center, to preserve its original proportions.
+    # around each label's own center, then reduce labels uniformly by 15%.
     style = ET.SubElement(root, "{http://www.w3.org/2000/svg}style")
-    style.text = "text { transform-box: fill-box; transform-origin: center; transform: scaleY(1.666666667); }"
+    style.text = "text { transform-box: fill-box; transform-origin: center; transform: scale(0.85, 1.416666667); }"
     return ET.tostring(root, encoding="utf-8", xml_declaration=True)
