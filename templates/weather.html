@@ -96,7 +96,7 @@
 		{% endif %}
 	</div>
 	{% endif %}
-	<p class="secret-message">HEJ ALVAR</p>
+	<p class="secret-message"><span>HEJ</span><strong>ALVAR</strong></p>
 </div>
 
 <figure class="weather-radar-preview">
@@ -105,7 +105,7 @@
         title="Rain radar over southern Sweden, including Lund and Skåne"
         allowfullscreen
     ></iframe>
-    <figcaption>Rain radar · Southern Sweden · Windy · <a href="https://www.windy.com/-Weather-radar-radar?radar,56.2,14,7" target="_blank" rel="noopener">Open larger map</a></figcaption>
+    <figcaption>Rain radar · Southern Sweden · RainViewer · <a href="{{ url_for('local_radar_map') }}" target="_blank" rel="noopener">Open larger map</a></figcaption>
 </figure>
 </div>
 {% endblock %}

@@ -82,6 +82,7 @@ body {
 }
 
 .weather-top-section {
+	container-type: inline-size;
 	grid-area: icons;
 	display: grid;
 	gap: 14px;
@@ -213,6 +214,18 @@ body {
 	font-weight: 800;
 	line-height: 1.2;
 	color: #2c5f88;
+}
+
+.secret-message span,
+.secret-message strong {
+	display: block;
+}
+
+.secret-message strong {
+	font-size: clamp(28px, 31cqw, 112px);
+	font-weight: 900;
+	line-height: 1;
+	letter-spacing: -0.06em;
 }
 
 .weather-radar-preview {

@@ -185,15 +185,7 @@ def _get_radar_page_data() -> dict:
 
     return {
         "radar_url": radar_url,
-        "radar_embed_url": "https://embed.windy.com/embed.html?" + urlencode({
-            "type": "map", "location": "coordinates",
-            # Focus on Skåne and southern Sweden rather than Lake Vänern.
-            "lat": 56.2,
-            "lon": 14.0,
-            "zoom": 7, "overlay": "radar", "product": "radar",
-            "level": "surface", "metricRain": "mm", "metricTemp": "°C",
-            "metricWind": "m/s",
-        }),
+        "radar_embed_url": url_for("local_radar_map"),
         "area": area,
         "radar_type": radar_type,
         "radar_areas": RADAR_ALLOWED_AREAS,
@@ -210,6 +202,11 @@ def inject_feature_flags():
 def meteogram_image():
     local_path = Path(app.static_folder) / "assets/meteogram.svg" if USE_LOCAL else None
     return Response(readable_meteogram(local_path), mimetype="image/svg+xml")
+
+
+@app.get("/weather/local-radar")
+def local_radar_map():
+    return render_template("local_radar.html")
 
 
 def _get_traffic_stop_config(prefix: str, default_label: str, default_mode: str) -> dict | None:

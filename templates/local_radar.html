@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rain radar · Lund</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <style>
+        html, body, #radar-map { height: 100%; margin: 0; }
+        body { font-family: sans-serif; }
+        .radar-controls { position: absolute; bottom: 32px; left: 8px; right: 8px; z-index: 1000; background: white; padding: 8px; border-radius: 6px; font-size: 13px; }
+        .radar-controls button { min-height: 40px; padding: 6px 12px; margin-right: 8px; }
+        .lund-label { font-weight: bold; color: #a41313; }
+    </style>
+</head>
+<body>
+    <div id="radar-map" role="region" aria-label="Rain radar with Lund marked by a red dot"></div>
+    <div class="radar-controls">
+        <button id="radar-play" type="button" aria-pressed="true">Pause</button>
+        <span id="radar-status" role="status">Loading radar…</span>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="{{ url_for('static', filename='js/local-radar.js') }}"></script>
+</body>
+</html>
