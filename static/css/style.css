@@ -3,7 +3,7 @@ body {
 }
 
 #smhi {
-	width: 98%;
+	width: 85%;
 	aspect-ratio: 782 / 183.6;
 	position: relative;
 	overflow: hidden;
@@ -23,7 +23,7 @@ body {
 .meteogram-attribution {
 	font-size: 12px;
 	text-align: right;
-	width: 98%;
+	width: 85%;
 }
 
 .header {
@@ -84,7 +84,7 @@ body {
 .weather-top-section {
 	display: grid;
 	gap: 14px;
-	padding-left: 10px;
+	padding-left: 24px;
 }
 
 .food-summary {
@@ -106,10 +106,10 @@ body {
 .weather-icon-column {
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
 	flex-wrap: wrap;
-	gap: 10px;
-	font-size: 64px;
+	gap: 18px;
+	font-size: 84px;
 	text-align: center;
 }
 
@@ -176,7 +176,7 @@ body {
 
 .weather-bottom-section {
 	display: grid;
-	grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+	grid-template-columns: minmax(250px, 0.55fr) minmax(0, 1.45fr);
 	gap: 18px;
 	margin-top: 8px;
 	align-items: start;
@@ -186,7 +186,7 @@ body {
 .forecast-list {
 	list-style: none;
 	margin: 0;
-	padding: 0;
+	padding: 0 0 0 24px;
 }
 
 .weather-radar-preview {
@@ -197,7 +197,7 @@ body {
 .weather-radar-preview img {
 	display: block;
 	width: 100%;
-	height: 230px;
+	height: clamp(280px, 40vw, 440px);
 	object-fit: contain;
 	object-position: right top;
 }
@@ -231,10 +231,10 @@ body {
 }
 
 .forecast-row {
-	min-height: 28px;
-	padding: 3px 0;
+	min-height: 40px;
+	padding: 5px 0;
 	display: grid;
-	grid-template-columns: 34px 38px 28px 1fr;
+	grid-template-columns: 34px 38px 40px 1fr;
 	grid-template-areas: "day date icon temps";
 	gap: 8px;
 	align-items: center;
@@ -256,7 +256,7 @@ body {
 
 .forecast-icon {
 	grid-area: icon;
-	font-size: 22px;
+	font-size: 32px;
 	margin: 0;
 	color: #2c5f88;
 	line-height: 1;
@@ -407,7 +407,7 @@ body {
 
 @media (max-width: 900px) {
 	.forecast-icon {
-		font-size: 25px;
+		font-size: 30px;
 	}
 
 	.forecast-temps {
@@ -428,7 +428,7 @@ body {
 	}
 
 	.weather-icon-column {
-		font-size: 52px;
+		font-size: 72px;
 	}
 
 	.pollen-row {
@@ -447,7 +447,7 @@ body {
 
 @media (max-width: 600px) {
 	.forecast-icon {
-		font-size: 22px;
+		font-size: 28px;
 	}
 
 	.forecast-temps {
@@ -460,7 +460,7 @@ body {
 	}
 
 	.weather-icon-column {
-		font-size: 44px;
+		font-size: 60px;
 		gap: 8px;
 	}
 
