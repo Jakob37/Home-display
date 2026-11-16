@@ -185,6 +185,14 @@ def _get_radar_page_data() -> dict:
 
     return {
         "radar_url": radar_url,
+        "radar_embed_url": "https://embed.windy.com/embed.html?" + urlencode({
+            "type": "map", "location": "coordinates",
+            "lat": config.get("weather", "lat", fallback="55.705"),
+            "lon": config.get("weather", "long", fallback="13.191"),
+            "zoom": 7, "overlay": "radar", "product": "radar",
+            "level": "surface", "metricRain": "mm", "metricTemp": "°C",
+            "metricWind": "m/s", "marker": "true",
+        }),
         "area": area,
         "radar_type": radar_type,
         "radar_areas": RADAR_ALLOWED_AREAS,

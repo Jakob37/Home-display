@@ -3,7 +3,7 @@ body {
 }
 
 #smhi {
-	width: 85%;
+	width: 100%;
 	aspect-ratio: 782 / 183.6;
 	position: relative;
 	overflow: hidden;
@@ -23,7 +23,7 @@ body {
 .meteogram-attribution {
 	font-size: 12px;
 	text-align: right;
-	width: 85%;
+	width: 100%;
 }
 
 .header {
@@ -82,9 +82,11 @@ body {
 }
 
 .weather-top-section {
+	grid-area: icons;
 	display: grid;
 	gap: 14px;
-	padding-left: 24px;
+	padding: 16px 8px;
+	align-self: center;
 }
 
 .food-summary {
@@ -98,18 +100,18 @@ body {
 	align-items: start;
 }
 
-.weather-summary-panel-pollen-only,
-.weather-summary-panel-icons-only {
+.weather-top-section .weather-summary-panel-pollen-only,
+.weather-top-section .weather-summary-panel-icons-only {
 	grid-template-columns: minmax(0, 1fr);
 }
 
 .weather-icon-column {
 	display: flex;
 	align-items: center;
-	justify-content: flex-start;
+	justify-content: center;
 	flex-wrap: wrap;
 	gap: 18px;
-	font-size: 84px;
+	font-size: clamp(52px, 5vw, 84px);
 	text-align: center;
 }
 
@@ -174,13 +176,24 @@ body {
 	background-color: #d62828;
 }
 
-.weather-bottom-section {
+.weather-dashboard {
 	display: grid;
-	grid-template-columns: minmax(250px, 0.55fr) minmax(0, 1.45fr);
-	gap: 18px;
-	margin-top: 8px;
+	grid-template-columns: minmax(230px, 0.8fr) minmax(110px, 0.4fr) minmax(0, 1.6fr);
+	grid-template-rows: auto 1fr;
+	grid-template-areas: "chart chart radar" "forecast icons radar";
+	gap: 16px;
+	padding: 0 16px 16px;
 	align-items: start;
-	width: 98%;
+}
+
+.weather-chart-section {
+	grid-area: chart;
+	min-width: 0;
+}
+
+.weather-daily-section {
+	grid-area: forecast;
+	min-width: 0;
 }
 
 .forecast-list {
@@ -190,16 +203,17 @@ body {
 }
 
 .weather-radar-preview {
+	grid-area: radar;
 	margin: 0;
 	text-align: right;
+	min-width: 0;
 }
 
-.weather-radar-preview img {
+.weather-radar-preview iframe {
 	display: block;
 	width: 100%;
-	height: clamp(280px, 40vw, 440px);
-	object-fit: contain;
-	object-position: right top;
+	height: clamp(440px, 76vh, 760px);
+	border: 0;
 }
 
 .weather-radar-preview figcaption {
@@ -208,9 +222,20 @@ body {
 	margin-top: 4px;
 }
 
+@media (max-width: 800px) {
+	.weather-dashboard {
+		grid-template-columns: minmax(0, 1fr) minmax(100px, 0.5fr);
+		grid-template-areas: "chart chart" "forecast icons" "radar radar";
+	}
+	.weather-radar-preview iframe {
+		height: 480px;
+	}
+}
+
 @media (max-width: 520px) {
-	.weather-bottom-section {
-		grid-template-columns: 1fr;
+	.weather-dashboard {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-areas: "chart" "forecast" "icons" "radar";
 	}
 }
 

@@ -18,15 +18,33 @@
 
 
 {% block main_content %}
+<div class="weather-dashboard">
+<section class="weather-chart-section" aria-label="Hourly forecast">
 <div id="smhi" class="weather-meteogram">
 	<img src="{{ url_for('meteogram_image') }}" alt="Hourly weather forecast from YR" width="98%" height="auto">
 </div>
 <div class="meteogram-attribution"><a href="https://www.yr.no/en/forecast/daily-table/2-2693678/">Forecast by YR</a></div>
 
-<!-- <div style="font-size: 80px; color: orange; text-align: center;">
-    &#9733;&#9733;&#9733;&#9733;&#9733;
-</div> -->
-
+{% if weather_error %}
+<div class="weather-error">{{ weather_error }}</div>
+{% endif %}
+</section>
+<section class="weather-daily-section" aria-label="Daily forecast">
+{% if long_term_forecast|length > 0 %}
+<ul class="forecast-list" aria-label="Seven-day forecast">
+	{% for entry in long_term_forecast %}
+	<li class="forecast-row">
+		<div class="forecast-day">{{ entry.weekday }}</div>
+		<div class="forecast-date">{{ entry.date[5:] }}</div>
+		<div class="forecast-icon">
+			<i class="fas {{ entry.icon }}" title="{{ entry.symbol }}" aria-label="{{ entry.symbol }}"></i>
+		</div>
+		<div class="forecast-temps">{{ entry.max_temp }}&deg; / {{ entry.min_temp }}&deg;</div>
+	</li>
+	{% endfor %}
+</ul>
+{% endif %}
+</section>
 <div class="weather-top-section">
 	{% if enable_food_tracking and food_display|length > 0 %}
 	<div class="food-summary">
@@ -80,31 +98,13 @@
 	{% endif %}
 </div>
 
-{% if weather_error %}
-<div class="weather-error">{{ weather_error }}</div>
-{% endif %}
-
-<div class="weather-bottom-section">
-{% if long_term_forecast|length > 0 %}
-<ul class="forecast-list" aria-label="Seven-day forecast">
-	{% for entry in long_term_forecast %}
-	<li class="forecast-row">
-		<div class="forecast-day">{{ entry.weekday }}</div>
-		<div class="forecast-date">{{ entry.date[5:] }}</div>
-		<div class="forecast-icon">
-			<i class="fas {{ entry.icon }}" title="{{ entry.symbol }}" aria-label="{{ entry.symbol }}"></i>
-		</div>
-		<div class="forecast-temps">{{ entry.max_temp }}&deg; / {{ entry.min_temp }}&deg;</div>
-	</li>
-	{% endfor %}
-</ul>
-{% endif %}
 <figure class="weather-radar-preview">
-	<a href="{{ url_for('weather_radar', area=area, type=radar_type) }}" aria-label="Open rain radar">
-		<img src="{{ radar_url }}" alt="Animated rain radar for {{ area.replace('_', ' ') }}" onerror="this.hidden = true; this.closest('figure').querySelector('.radar-preview-error').hidden = false;">
-	</a>
-	<p class="radar-preview-error" hidden>Radar image unavailable. <a href="{{ url_for('weather_radar') }}">Open rain radar</a></p>
-	<figcaption>Rain radar · MET Norway · <a href="{{ url_for('weather_radar', area=area, type=radar_type) }}">Expand</a></figcaption>
+    <iframe
+        src="{{ radar_embed_url }}"
+        title="Rain radar centered on Lund, Skåne"
+        allowfullscreen
+    ></iframe>
+    <figcaption>Rain radar · Lund / Skåne · Windy · <a href="https://www.windy.com/-Weather-radar-radar?radar,55.705,13.191,7" target="_blank" rel="noopener">Open larger map</a></figcaption>
 </figure>
 </div>
 {% endblock %}
