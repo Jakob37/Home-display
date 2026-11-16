@@ -187,8 +187,8 @@ def _get_radar_page_data() -> dict:
         "radar_url": radar_url,
         "radar_embed_url": "https://embed.windy.com/embed.html?" + urlencode({
             "type": "map", "location": "coordinates",
-            # Center north of Lund to include more of Sweden above Skåne.
-            "lat": 57.5,
+            # Focus on Skåne and southern Sweden rather than Lake Vänern.
+            "lat": 56.2,
             "lon": 14.0,
             "zoom": 7, "overlay": "radar", "product": "radar",
             "level": "surface", "metricRain": "mm", "metricTemp": "°C",
