@@ -440,3 +440,9 @@ body {
 		height: 16px;
 	}
 }
+/* Hide the location heading embedded in YR's 782 x 391 meteogram.
+   Keep the attribution above it and the forecast chart below it visible. */
+.weather-meteogram img {
+    -webkit-mask-image: linear-gradient(to bottom, black 0% 12.3%, transparent 12.3% 21.7%, black 21.7% 100%);
+    mask-image: linear-gradient(to bottom, black 0% 12.3%, transparent 12.3% 21.7%, black 21.7% 100%);
+}

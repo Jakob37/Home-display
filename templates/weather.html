@@ -18,7 +18,7 @@
 
 
 {% block main_content %}
-<div id="smhi">
+<div id="smhi" class="weather-meteogram">
 	{% if use_local %}
 	<img src="{{ url_for('static', filename='assets/meteogram.svg')}}" alt="Local SVG" width="98%" height="auto">
 	{% else %}
