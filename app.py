@@ -55,7 +55,7 @@ cache = dict()
 cache["clock_seconds"] = False
 
 USE_LOCAL = False
-DEBUG_MODE = True
+DEBUG_MODE = False
 DEBUG_TEMP = 3
 ENABLE_FOOD_TRACKING = False
 ENABLE_POLLEN = False
