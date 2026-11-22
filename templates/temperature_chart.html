@@ -3,8 +3,18 @@
         <span class="temperature-chart-unit">Temperature (&deg;C)</span>
         <span class="temperature-key temperature-key-min">Min</span>
         <span class="temperature-key temperature-key-max">Max</span>
+        <span class="temperature-key temperature-key-precipitation"
+              title="Chance of more than 0.5 mm of precipitation in 24 hours">24h precip. chance</span>
+        {% if temperature_chart.has_outlook %}
+        <span class="temperature-key temperature-key-outlook">Outlook</span>
+        {% endif %}
+        <span class="temperature-chart-source">
+            MET Norway data, summarized &middot;
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>
+        </span>
     </figcaption>
-    <div class="temperature-chart-scroll" role="region" aria-label="Daily temperature bars" tabindex="0">
+    <div class="temperature-chart-scroll" role="region"
+         aria-label="{{ temperature_chart.days|length }}-day temperature and precipitation forecast" tabindex="0">
         <div class="temperature-chart-plot" style="--forecast-days: {{ temperature_chart.days|length }}">
             <div class="temperature-chart-ticks" aria-hidden="true">
                 {% for tick in temperature_chart.ticks %}
@@ -16,7 +26,7 @@
             </div>
             <ol class="temperature-chart-days" role="list">
                 {% for day in temperature_chart.days %}
-                <li class="temperature-chart-day">
+                <li class="temperature-chart-day{% if day.is_outlook %} temperature-chart-outlook{% endif %}">
                     <time class="temperature-chart-date" datetime="{{ day.date }}" lang="sv">
                         <strong>{{ day.weekday }}</strong>
                         <span>{{ day.date_label }}</span>
@@ -31,8 +41,19 @@
                         </div>
                         {% endfor %}
                     </div>
-                    <div class="temperature-chart-icon">
-                        <i class="fas {{ day.icon }}" role="img" title="{{ day.symbol }}" aria-label="{{ day.symbol }}"></i>
+                    <div class="temperature-chart-details">
+                        {% if day.icon %}
+                        <i class="fas {{ day.icon }} temperature-chart-icon" role="img"
+                           title="{{ day.symbol }}" aria-label="{{ day.symbol }}"></i>
+                        {% endif %}
+                        {% if day.precipitation_chance is not none %}
+                        <span class="temperature-precipitation" style="--precipitation-chance: {{ day.precipitation_chance }}%"
+                              title="Chance of more than 0.5 mm of precipitation in 24 hours"
+                              role="img" aria-label="{{ day.precipitation_chance }} percent chance of precipitation">{{ day.precipitation_chance }}%</span>
+                        {% else %}
+                        <span class="temperature-precipitation" title="24-hour precipitation chance unavailable"
+                              role="img" aria-label="24-hour precipitation chance unavailable">&mdash;</span>
+                        {% endif %}
                     </div>
                 </li>
                 {% endfor %}

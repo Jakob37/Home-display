@@ -1,8 +1,9 @@
 .temperature-chart {
-    --plot-height: clamp(13rem, 49vh, 35rem);
-    --plot-top: 1.6rem;
+    --plot-height: clamp(10rem, 36vh, 25rem);
+    --plot-top: 1.35rem;
     --min-color: #4c87b4;
     --max-color: #d88043;
+    --precipitation-color: #bedff1;
     background: #f6f9fb;
     border: 1px solid #dae4ec;
     border-radius: 1rem;
@@ -10,15 +11,16 @@
     font-variant-numeric: tabular-nums;
     margin: 1rem auto;
     max-width: 92rem;
-    padding: clamp(.7rem, 2vw, 1.6rem);
+    padding: clamp(.7rem, 1.5vw, 1.3rem);
 }
 
 .temperature-chart-legend {
     align-items: center;
     display: flex;
-    font-size: clamp(.85rem, 1.6vw, 1.15rem);
-    gap: clamp(.7rem, 2vw, 1.6rem);
-    margin-bottom: .7rem;
+    flex-wrap: wrap;
+    font-size: clamp(.75rem, 1.1vw, 1rem);
+    gap: .35rem clamp(.55rem, 1.3vw, 1.15rem);
+    margin-bottom: .4rem;
 }
 
 .temperature-chart-unit {
@@ -26,10 +28,17 @@
     margin-right: auto;
 }
 
+.temperature-chart-source {
+    color: #466276;
+    font-size: .7rem;
+    white-space: nowrap;
+}
+
 .temperature-key {
     align-items: center;
     display: inline-flex;
     gap: .35em;
+    white-space: nowrap;
 }
 
 .temperature-key::before {
@@ -50,13 +59,21 @@
     --bar-color: var(--max-color);
 }
 
+.temperature-key-precipitation {
+    --bar-color: var(--precipitation-color);
+}
+
+.temperature-key-outlook {
+    --bar-color: #d4e3ed;
+}
+
 .temperature-chart-scroll {
     overflow-x: auto;
 }
 
 .temperature-chart-plot {
     margin-left: 2.65rem;
-    min-width: calc(3.35rem * var(--forecast-days));
+    min-width: calc(3.5rem * var(--forecast-days));
     padding-top: var(--plot-top);
     position: relative;
 }
@@ -100,12 +117,20 @@
     justify-items: center;
 }
 
+.temperature-chart-outlook {
+    background-color: #dbe7f175;
+}
+
+.temperature-chart-day:not(.temperature-chart-outlook) + .temperature-chart-outlook {
+    border-inline-start: 1px dashed #9eb3c5;
+}
+
 .temperature-chart-date {
     display: grid;
-    font-size: clamp(.75rem, 1.45vw, 1.25rem);
+    font-size: clamp(.7rem, .9vw, .95rem);
     grid-row: 2;
     line-height: 1.2;
-    margin-top: 1.6rem;
+    margin-top: 1.35rem;
     text-align: center;
     white-space: nowrap;
 }
@@ -114,17 +139,37 @@
     color: #466276;
 }
 
+.temperature-chart-details {
+    align-items: center;
+    display: flex;
+    gap: .25rem;
+    grid-row: 3;
+    margin: .3rem 0 .25rem;
+    min-height: 1.25rem;
+}
+
 .temperature-chart-icon {
     color: #2c5f88;
-    font-size: clamp(1.25rem, 2vw, 2rem);
-    grid-area: 3 / 1;
-    line-height: 1;
-    margin-top: .45rem;
+    font-size: .85rem;
+}
+
+.temperature-precipitation {
+    --precipitation-chance: 0%;
+    background: linear-gradient(90deg,
+        var(--precipitation-color) var(--precipitation-chance),
+        #edf3f7 var(--precipitation-chance));
+    border-radius: .2rem;
+    color: #245273;
+    font-size: .75rem;
+    font-weight: 700;
+    min-width: 2rem;
+    padding: .05rem .18rem;
+    text-align: center;
 }
 
 .temperature-bars {
     display: flex;
-    gap: clamp(.25rem, 1vw, .9rem);
+    gap: clamp(.24rem, .6vw, .55rem);
     grid-row: 1;
     justify-content: center;
     width: 100%;
@@ -152,7 +197,7 @@
 
 .temperature-bar-fill span {
     bottom: calc(100% + .2rem);
-    font-size: clamp(.7rem, 1.45vw, 1.25rem);
+    font-size: clamp(.65rem, 1vw, .92rem);
     font-weight: 700;
     left: 50%;
     line-height: 1;
@@ -167,27 +212,9 @@
 }
 
 .weather-daily-section .temperature-chart {
-    --plot-height: clamp(9rem, 18vh, 12.25rem);
-    --plot-top: 1.25rem;
+    --plot-height: clamp(7.75rem, 15vh, 10.5rem);
     margin: .3rem 0 0;
     padding: .75rem clamp(.6rem, 1.3vw, 1rem);
-}
-
-.weather-daily-section .temperature-chart-legend {
-    margin-bottom: .35rem;
-}
-
-.weather-daily-section .temperature-chart-legend,
-.weather-daily-section .temperature-chart-date {
-    font-size: clamp(.75rem, 1vw, 1rem);
-}
-
-.weather-daily-section .temperature-bar-fill span {
-    font-size: clamp(.65rem, 1.05vw, 1rem);
-}
-
-.weather-daily-section .temperature-chart-icon {
-    font-size: clamp(1rem, 1.4vw, 1.55rem);
 }
 
 @media (max-width: 520px) {
@@ -203,7 +230,19 @@
 
     .temperature-chart-plot {
         margin-left: 2.1rem;
-        min-width: calc(2.65rem * var(--forecast-days));
+    }
+
+    .temperature-chart-details {
+        gap: .18rem;
+    }
+
+    .temperature-chart-icon {
+        font-size: .78rem;
+    }
+
+    .temperature-precipitation {
+        font-size: .7rem;
+        min-width: 1.75rem;
     }
 
     .temperature-bars {
@@ -212,9 +251,5 @@
 
     .temperature-bar {
         width: 38%;
-    }
-
-    .temperature-bar-fill span {
-        font-size: .65rem;
     }
 }

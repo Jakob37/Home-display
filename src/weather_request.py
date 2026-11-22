@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from threading import Lock
 
 import requests
 
 REQUEST_TIMEOUT_SECONDS = 10
 FORECAST_CACHE_TTL = timedelta(minutes=30)
-_forecast_cache: dict[tuple[float, float], dict[str, datetime | list[dict]]] = {}
+LOCATION_FORECAST = "locationforecast/2.0/compact"
+SUBSEASONAL_FORECAST = "subseasonal/1.0/complete"
+LOCATION_FORECAST_DAYS = 10
+_forecast_cache: dict[tuple[str, float, float], dict[str, datetime | list[dict]]] = {}
 _forecast_cache_lock = Lock()
 
 
@@ -39,16 +42,10 @@ def _normalize_coordinate(value: float | str) -> float:
     return round(float(value), 4)
 
 
-def _get_cache_key(latitude: float | str, longitude: float | str) -> tuple[float, float]:
-    return (_normalize_coordinate(latitude), _normalize_coordinate(longitude))
-
-
 def _get_cached_forecast(
-    latitude: float | str,
-    longitude: float | str,
+    cache_key: tuple[str, float, float],
     max_age: timedelta | None = FORECAST_CACHE_TTL,
 ) -> list[dict] | None:
-    cache_key = _get_cache_key(latitude, longitude)
     with _forecast_cache_lock:
         cached_forecast = _forecast_cache.get(cache_key)
 
@@ -62,9 +59,8 @@ def _get_cached_forecast(
 
 
 def _store_cached_forecast(
-    latitude: float | str, longitude: float | str, timeseries: list[dict]
+    cache_key: tuple[str, float, float], timeseries: list[dict]
 ) -> None:
-    cache_key = _get_cache_key(latitude, longitude)
     with _forecast_cache_lock:
         _forecast_cache[cache_key] = {
             "fetched_at": datetime.now(),
@@ -80,34 +76,36 @@ def _raise_clean_api_error(exc: Exception) -> None:
     raise WeatherApiError("Weather data could not be parsed.") from exc
 
 
-def _request_forecast(latitude: float | str, longitude: float | str) -> list[dict]:
-    normalized_latitude = _normalize_coordinate(latitude)
-    normalized_longitude = _normalize_coordinate(longitude)
-    url = (
-        "https://api.met.no/weatherapi/locationforecast/2.0/compact"
-        f"?lat={normalized_latitude}&lon={normalized_longitude}"
-    )
-    headers = {"User-Agent": "Home-display/1.0"}
-    response = requests.get(url, headers=headers, timeout=REQUEST_TIMEOUT_SECONDS)
+def _request_forecast(cache_key: tuple[str, float, float]) -> list[dict]:
+    product, latitude, longitude = cache_key
+    url = f"https://api.met.no/weatherapi/{product}"
+    headers = {"User-Agent": "Home-display/1.0 github.com/Jakob37/Home-display"}
+    params = {"lat": latitude, "lon": longitude}
+    response = requests.get(url, params=params, headers=headers, timeout=REQUEST_TIMEOUT_SECONDS)
     response.raise_for_status()
-    data = response.json()
-    return data["properties"]["timeseries"]
+    timeseries = response.json()["properties"]["timeseries"]
+    if not isinstance(timeseries, list) or not timeseries:
+        raise ValueError("Forecast response contains no timeseries.")
+    return timeseries
 
 
-def _fetch_forecast(latitude: float | str, longitude: float | str) -> list[dict]:
-    cached_timeseries = _get_cached_forecast(latitude, longitude)
+def _fetch_forecast(
+    latitude: float | str, longitude: float | str, product: str = LOCATION_FORECAST
+) -> list[dict]:
+    cache_key = (product, _normalize_coordinate(latitude), _normalize_coordinate(longitude))
+    cached_timeseries = _get_cached_forecast(cache_key)
     if cached_timeseries is not None:
         return cached_timeseries
 
     try:
-        timeseries = _request_forecast(latitude, longitude)
+        timeseries = _request_forecast(cache_key)
     except (requests.RequestException, KeyError, TypeError, ValueError) as exc:
-        stale_timeseries = _get_cached_forecast(latitude, longitude, max_age=None)
+        stale_timeseries = _get_cached_forecast(cache_key, max_age=None)
         if stale_timeseries is not None:
             return stale_timeseries
         _raise_clean_api_error(exc)
 
-    _store_cached_forecast(latitude, longitude, timeseries)
+    _store_cached_forecast(cache_key, timeseries)
     return timeseries
 
 
@@ -124,7 +122,7 @@ def _get_temperature_from_timeseries(timeseries: list[dict]) -> float:
     raise ValueError("Current temperature not found in forecast response.")
 
 
-def _build_long_term_forecast(timeseries: list[dict], days: int = 10) -> list[dict]:
+def _build_long_term_forecast(timeseries: list[dict], days: int, today: date) -> list[dict]:
     grouped: dict[str, list[dict]] = defaultdict(list)
 
     for entry in timeseries:
@@ -132,10 +130,10 @@ def _build_long_term_forecast(timeseries: list[dict], days: int = 10) -> list[di
         grouped[date_key].append(entry)
 
     forecast = []
-    today = datetime.now().date()
+    end = today + timedelta(days=days)
     for date_key in sorted(grouped.keys()):
-        date_obj = datetime.fromisoformat(date_key).date()
-        if date_obj < today:
+        date_obj = date.fromisoformat(date_key)
+        if not today <= date_obj < end:
             continue
 
         day_entries = grouped[date_key]
@@ -162,10 +160,58 @@ def _build_long_term_forecast(timeseries: list[dict], days: int = 10) -> list[di
             }
         )
 
-        if len(forecast) >= days:
-            break
-
     return forecast
+
+
+def _merge_daily_outlook(
+    forecast: list[dict], outlook: list[dict], today: date, days: int
+) -> list[dict]:
+    by_date = {entry["date"]: entry for entry in forecast}
+    end = today + timedelta(days=days)
+    for entry in outlook:
+        date_key = entry["time"][:10]
+        day = date.fromisoformat(date_key)
+        if not today <= day < end:
+            continue
+
+        data = entry.get("data") or {}
+        daily = (data.get("next_24_hours") or {}).get("details") or {}
+        # Use the same 24-hour probability on dates from either forecast.
+        probability = daily.get("probability_of_precipitation")
+        chance = (
+            round(probability)
+            if isinstance(probability, (int, float)) and 0 <= probability <= 100
+            else None
+        )
+        if date_key in by_date:
+            by_date[date_key] = {**by_date[date_key], "precipitation_chance": chance}
+            continue
+
+        low = daily.get("air_temperature_min")
+        high = daily.get("air_temperature_max")
+        if low is not None and high is not None:
+            by_date[date_key] = {
+                "date": date_key,
+                "weekday": day.strftime("%a"),
+                "min_temp": round(low),
+                "max_temp": round(high),
+                "precipitation_chance": chance,
+                "is_outlook": True,
+            }
+    return [by_date[date_key] for date_key in sorted(by_date)]
+
+
+def _get_daily_forecast(
+    timeseries: list[dict], latitude: float | str, longitude: float | str, days: int
+) -> list[dict]:
+    today = datetime.now().date()
+    forecast = _build_long_term_forecast(timeseries, min(days, LOCATION_FORECAST_DAYS), today)
+    try:
+        outlook = _fetch_forecast(latitude, longitude, SUBSEASONAL_FORECAST)
+        return _merge_daily_outlook(forecast, outlook, today, days)
+    except (WeatherApiError, AttributeError, KeyError, TypeError, ValueError):
+        # A separate outlook failure still leaves the Locationforecast days available.
+        return forecast
 
 
 def get_temperature(latitude: float, longitude: float) -> float:
@@ -181,7 +227,7 @@ def get_long_term_forecast(
 ) -> list[dict]:
     timeseries = _fetch_forecast(latitude, longitude)
     try:
-        return _build_long_term_forecast(timeseries, days=days)
+        return _get_daily_forecast(timeseries, latitude, longitude, days)
     except (KeyError, TypeError, ValueError) as exc:
         _raise_clean_api_error(exc)
 
@@ -193,7 +239,7 @@ def get_weather_snapshot(
     try:
         return {
             "temperature": _get_temperature_from_timeseries(timeseries),
-            "long_term_forecast": _build_long_term_forecast(timeseries, days=days),
+            "long_term_forecast": _get_daily_forecast(timeseries, latitude, longitude, days),
         }
     except (KeyError, TypeError, ValueError) as exc:
         _raise_clean_api_error(exc)

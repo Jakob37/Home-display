@@ -44,9 +44,15 @@ def build_temperature_chart(forecast: list[dict]) -> dict | None:
                 "date": entry["date"],
                 "weekday": SWEDISH_WEEKDAYS[day.weekday()],
                 "date_label": f"{day.day} {SWEDISH_MONTHS[day.month - 1]}",
-                "icon": entry["icon"],
-                "symbol": entry["symbol"],
+                "icon": entry.get("icon"),
+                "symbol": entry.get("symbol"),
+                "precipitation_chance": entry.get("precipitation_chance"),
+                "is_outlook": entry.get("is_outlook", False),
                 "bars": bars,
             }
         )
-    return {"days": days, "ticks": ticks}
+    return {
+        "days": days,
+        "ticks": ticks,
+        "has_outlook": any(day["is_outlook"] for day in days),
+    }

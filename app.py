@@ -60,7 +60,8 @@ DEBUG_MODE = False
 DEBUG_TEMP = 3
 ENABLE_FOOD_TRACKING = False
 ENABLE_POLLEN = False
-DEFAULT_FORECAST_DAYS = 7
+DASHBOARD_FORECAST_DAYS = 14
+CALENDAR_FORECAST_DAYS = 21
 DEFAULT_RADAR_AREA = "nordic"
 DEFAULT_RADAR_TYPE = "reflectivity"
 RADAR_ALLOWED_AREAS = (
@@ -135,7 +136,7 @@ def _build_debug_forecast(days: int) -> list[dict]:
     ]
 
 
-def _get_weather_page_data(days: int = DEFAULT_FORECAST_DAYS) -> dict:
+def _get_weather_page_data(days: int) -> dict:
     if USE_LOCAL:
         return {
             "temperature": DEBUG_TEMP,
@@ -325,7 +326,7 @@ def index():
 
     my_clock = str(datetime.datetime.now().strftime("%H:%M"))
     my_date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
-    weather_data = _get_weather_page_data(days=DEFAULT_FORECAST_DAYS)
+    weather_data = _get_weather_page_data(days=DASHBOARD_FORECAST_DAYS)
     lund_temperature = weather_data["temperature"]
     weather_error = weather_data["error"]
 
@@ -368,11 +369,13 @@ def index():
 
 @app.route("/weather/long-term")
 def weather_long_term():
-    weather_data = _get_weather_page_data(days=DEFAULT_FORECAST_DAYS)
+    weather_data = _get_weather_page_data(days=CALENDAR_FORECAST_DAYS)
+    temperature_chart = build_temperature_chart(weather_data["long_term_forecast"])
+    title = f"{len(temperature_chart['days'])}-day forecast" if temperature_chart else "Daily forecast"
     return render_template(
         "long_term_weather.html",
-        title="7-day forecast",
-        temperature_chart=build_temperature_chart(weather_data["long_term_forecast"]),
+        title=title,
+        temperature_chart=temperature_chart,
         weather_error=weather_data["error"],
     )
 
