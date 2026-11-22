@@ -327,7 +327,6 @@ def index():
     my_date = str(datetime.datetime.now().strftime("%Y-%m-%d"))
     weather_data = _get_weather_page_data(days=DEFAULT_FORECAST_DAYS)
     lund_temperature = weather_data["temperature"]
-    long_term_forecast = weather_data["long_term_forecast"]
     weather_error = weather_data["error"]
 
     if USE_LOCAL or not ENABLE_POLLEN:
@@ -360,7 +359,7 @@ def index():
         "pollen_retrieved_at": pollen_retrieved_at,
         "weather_icons": weather_icons,
         "food_display": food_selections,
-        "long_term_forecast": long_term_forecast,
+        "temperature_chart": build_temperature_chart(weather_data["long_term_forecast"]),
         "weather_error": weather_error,
     }
 

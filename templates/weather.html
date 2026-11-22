@@ -3,6 +3,7 @@
 
 {% block head_content %}
 <meta http-equiv="refresh" content="1800" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/long-term-forecast.css', v='dashboard') }}">
 {% endblock %}
 
 {% block title_content %}
@@ -33,19 +34,8 @@
 {% endif %}
 </section>
 <section class="weather-daily-section" aria-label="Daily forecast">
-{% if long_term_forecast|length > 0 %}
-<ul class="forecast-list" aria-label="Seven-day forecast">
-	{% for entry in long_term_forecast %}
-	<li class="forecast-row">
-		<div class="forecast-day">{{ entry.weekday }}</div>
-		<div class="forecast-date">{{ entry.date[5:] }}</div>
-		<div class="forecast-icon">
-			<i class="fas {{ entry.icon }}" title="{{ entry.symbol }}" aria-label="{{ entry.symbol }}"></i>
-		</div>
-		<div class="forecast-temps">{{ entry.max_temp }}&deg; / {{ entry.min_temp }}&deg;</div>
-	</li>
-	{% endfor %}
-</ul>
+{% if temperature_chart %}
+{% include 'temperature_chart.html' %}
 {% endif %}
 </section>
 <div class="weather-top-section">

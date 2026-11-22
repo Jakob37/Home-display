@@ -114,8 +114,11 @@
     color: #466276;
 }
 
-.temperature-chart-day .forecast-icon {
+.temperature-chart-icon {
+    color: #2c5f88;
+    font-size: clamp(1.25rem, 2vw, 2rem);
     grid-area: 3 / 1;
+    line-height: 1;
     margin-top: .45rem;
 }
 
@@ -161,6 +164,30 @@
 .temperature-bar-negative .temperature-bar-fill span {
     bottom: auto;
     top: calc(100% + .2rem);
+}
+
+.weather-daily-section .temperature-chart {
+    --plot-height: clamp(9rem, 18vh, 12.25rem);
+    --plot-top: 1.25rem;
+    margin: .3rem 0 0;
+    padding: .75rem clamp(.6rem, 1.3vw, 1rem);
+}
+
+.weather-daily-section .temperature-chart-legend {
+    margin-bottom: .35rem;
+}
+
+.weather-daily-section .temperature-chart-legend,
+.weather-daily-section .temperature-chart-date {
+    font-size: clamp(.75rem, 1vw, 1rem);
+}
+
+.weather-daily-section .temperature-bar-fill span {
+    font-size: clamp(.65rem, 1.05vw, 1rem);
+}
+
+.weather-daily-section .temperature-chart-icon {
+    font-size: clamp(1rem, 1.4vw, 1.55rem);
 }
 
 @media (max-width: 520px) {

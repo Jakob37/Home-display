@@ -1,0 +1,42 @@
+<figure class="temperature-chart">
+    <figcaption class="temperature-chart-legend">
+        <span class="temperature-chart-unit">Temperature (&deg;C)</span>
+        <span class="temperature-key temperature-key-min">Min</span>
+        <span class="temperature-key temperature-key-max">Max</span>
+    </figcaption>
+    <div class="temperature-chart-scroll" role="region" aria-label="Daily temperature bars" tabindex="0">
+        <div class="temperature-chart-plot" style="--forecast-days: {{ temperature_chart.days|length }}">
+            <div class="temperature-chart-ticks" aria-hidden="true">
+                {% for tick in temperature_chart.ticks %}
+                <div class="temperature-chart-tick{% if tick.value == 0 %} temperature-chart-zero{% endif %}"
+                     style="--tick-position: {{ tick.position }}">
+                    <span>{{ tick.value }}&deg;</span>
+                </div>
+                {% endfor %}
+            </div>
+            <ol class="temperature-chart-days" role="list">
+                {% for day in temperature_chart.days %}
+                <li class="temperature-chart-day">
+                    <time class="temperature-chart-date" datetime="{{ day.date }}" lang="sv">
+                        <strong>{{ day.weekday }}</strong>
+                        <span>{{ day.date_label }}</span>
+                    </time>
+                    <div class="temperature-bars">
+                        {% for bar in day.bars %}
+                        <div class="temperature-bar temperature-bar-{{ bar.series }}{% if bar.value < 0 %} temperature-bar-negative{% endif %}"
+                             role="img" aria-label="{{ bar.series|capitalize }} {{ bar.value }} degrees Celsius">
+                            <div class="temperature-bar-fill" style="--bar-bottom: {{ bar.bottom }}; --bar-height: {{ bar.height }}">
+                                <span>{{ bar.value }}&deg;</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="temperature-chart-icon">
+                        <i class="fas {{ day.icon }}" role="img" title="{{ day.symbol }}" aria-label="{{ day.symbol }}"></i>
+                    </div>
+                </li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+</figure>
