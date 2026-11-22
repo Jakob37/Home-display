@@ -18,6 +18,7 @@ from src.db.db import (
     save_selections,
 )
 from src.traffic import TrafficApiError, get_station_timetables, resolve_stop_group
+from src.weather_chart import build_temperature_chart
 from src.weather_request import WeatherApiError, get_weather_snapshot
 from src.pollen import get_pollen_snapshot
 from src.meteogram import readable_meteogram
@@ -372,7 +373,7 @@ def weather_long_term():
     return render_template(
         "long_term_weather.html",
         title="7-day forecast",
-        long_term_forecast=weather_data["long_term_forecast"],
+        temperature_chart=build_temperature_chart(weather_data["long_term_forecast"]),
         weather_error=weather_data["error"],
     )
 

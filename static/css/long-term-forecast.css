@@ -1,0 +1,193 @@
+.temperature-chart {
+    --plot-height: clamp(13rem, 49vh, 35rem);
+    --plot-top: 1.6rem;
+    --min-color: #4c87b4;
+    --max-color: #d88043;
+    background: #f6f9fb;
+    border: 1px solid #dae4ec;
+    border-radius: 1rem;
+    color: #213a4b;
+    font-variant-numeric: tabular-nums;
+    margin: 1rem auto;
+    max-width: 92rem;
+    padding: clamp(.7rem, 2vw, 1.6rem);
+}
+
+.temperature-chart-legend {
+    align-items: center;
+    display: flex;
+    font-size: clamp(.85rem, 1.6vw, 1.15rem);
+    gap: clamp(.7rem, 2vw, 1.6rem);
+    margin-bottom: .7rem;
+}
+
+.temperature-chart-unit {
+    font-weight: 700;
+    margin-right: auto;
+}
+
+.temperature-key {
+    align-items: center;
+    display: inline-flex;
+    gap: .35em;
+}
+
+.temperature-key::before {
+    background: var(--bar-color);
+    border-radius: .2em;
+    content: "";
+    height: .8em;
+    width: .8em;
+}
+
+.temperature-bar-min,
+.temperature-key-min {
+    --bar-color: var(--min-color);
+}
+
+.temperature-bar-max,
+.temperature-key-max {
+    --bar-color: var(--max-color);
+}
+
+.temperature-chart-scroll {
+    overflow-x: auto;
+}
+
+.temperature-chart-plot {
+    margin-left: 2.65rem;
+    min-width: calc(3.35rem * var(--forecast-days));
+    padding-top: var(--plot-top);
+    position: relative;
+}
+
+.temperature-chart-ticks {
+    height: var(--plot-height);
+    inset: var(--plot-top) 0 auto;
+    position: absolute;
+}
+
+.temperature-chart-tick {
+    border-top: 1px solid #d4dee6;
+    bottom: var(--tick-position);
+    position: absolute;
+    width: 100%;
+}
+
+.temperature-chart-zero {
+    border-color: #7892a6;
+}
+
+.temperature-chart-tick span {
+    color: #466276;
+    font-size: .85rem;
+    position: absolute;
+    right: calc(100% + .4rem);
+    transform: translateY(-50%);
+}
+
+.temperature-chart-days {
+    display: grid;
+    grid-template-columns: repeat(var(--forecast-days), minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.temperature-chart-day {
+    display: grid;
+    grid-template-rows: var(--plot-height) auto auto;
+    justify-items: center;
+}
+
+.temperature-chart-date {
+    display: grid;
+    font-size: clamp(.75rem, 1.45vw, 1.25rem);
+    grid-row: 2;
+    line-height: 1.2;
+    margin-top: 1.6rem;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.temperature-chart-date span {
+    color: #466276;
+}
+
+.temperature-chart-day .forecast-icon {
+    grid-area: 3 / 1;
+    margin-top: .45rem;
+}
+
+.temperature-bars {
+    display: flex;
+    gap: clamp(.25rem, 1vw, .9rem);
+    grid-row: 1;
+    justify-content: center;
+    width: 100%;
+}
+
+.temperature-bar {
+    max-width: 3rem;
+    position: relative;
+    width: 32%;
+}
+
+.temperature-bar-fill {
+    background: var(--bar-color);
+    border-radius: .25rem .25rem 0 0;
+    bottom: var(--bar-bottom);
+    height: var(--bar-height);
+    min-height: 2px;
+    position: absolute;
+    width: 100%;
+}
+
+.temperature-bar-negative .temperature-bar-fill {
+    border-radius: 0 0 .25rem .25rem;
+}
+
+.temperature-bar-fill span {
+    bottom: calc(100% + .2rem);
+    font-size: clamp(.7rem, 1.45vw, 1.25rem);
+    font-weight: 700;
+    left: 50%;
+    line-height: 1;
+    position: absolute;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.temperature-bar-negative .temperature-bar-fill span {
+    bottom: auto;
+    top: calc(100% + .2rem);
+}
+
+@media (max-width: 520px) {
+    .header,
+    .header .buttons {
+        flex-wrap: wrap;
+        row-gap: .4rem;
+    }
+
+    .header h1 {
+        margin-bottom: 0;
+    }
+
+    .temperature-chart-plot {
+        margin-left: 2.1rem;
+        min-width: calc(2.65rem * var(--forecast-days));
+    }
+
+    .temperature-bars {
+        gap: .3rem;
+    }
+
+    .temperature-bar {
+        width: 38%;
+    }
+
+    .temperature-bar-fill span {
+        font-size: .65rem;
+    }
+}
