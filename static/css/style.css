@@ -291,6 +291,7 @@ body {
 }
 
 .radar-page {
+	--radar-height: min(65vh, 660px);
 	padding: 0 10px 24px;
 }
 
@@ -304,6 +305,7 @@ body {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
+	justify-content: center;
 }
 
 .radar-chip {
@@ -323,6 +325,8 @@ body {
 .radar-card {
 	background: linear-gradient(180deg, #fbfbfb 0%, #f0f0f0 100%);
 	border-radius: 12px;
+	margin-inline: auto;
+	max-width: 62rem;
 	overflow: hidden;
 	padding: 12px;
 }
@@ -330,13 +334,35 @@ body {
 .radar-image {
 	display: block;
 	height: auto;
-	width: 100%;
+	margin-inline: auto;
+	max-height: var(--radar-height);
+	max-width: 100%;
+	width: auto;
+}
+
+/* Southern Sweden and Denmark occupy x 112–444 and y 500–761 in the 659 × 761 Nordic composite. */
+.radar-focus {
+	aspect-ratio: 332 / 261;
+	margin-inline: auto;
+	overflow: hidden;
+	position: relative;
+	width: min(100%, calc(var(--radar-height) * 332 / 261));
+}
+
+.radar-focus .radar-image {
+	left: calc(-112 / 332 * 100%);
+	max-height: none;
+	max-width: none;
+	position: absolute;
+	top: calc(-500 / 261 * 100%);
+	width: calc(659 / 332 * 100%);
 }
 
 .radar-meta {
 	color: #666;
 	font-size: 14px;
 	margin-top: 12px;
+	text-align: center;
 }
 
 .traffic-error {

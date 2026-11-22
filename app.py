@@ -62,13 +62,14 @@ ENABLE_FOOD_TRACKING = False
 ENABLE_POLLEN = False
 DASHBOARD_FORECAST_DAYS = 14
 CALENDAR_FORECAST_DAYS = 21
-DEFAULT_RADAR_AREA = "nordic"
+DEFAULT_RADAR_AREA = "southern_sweden"
 DEFAULT_RADAR_TYPE = "reflectivity"
 RADAR_ALLOWED_AREAS = (
+    DEFAULT_RADAR_AREA,
+    "nordic",
     "central_norway",
     "eastern_norway",
     "finnmark",
-    "nordic",
     "nordland",
     "northern_nordland",
     "northwestern_norway",
@@ -88,6 +89,7 @@ RADAR_ALLOWED_TYPES = (
     "preciptype",
     "reflectivity",
 )
+RADAR_COMPOSITE_TYPES = ("5level_reflectivity", "lx_reflectivity", "reflectivity")
 
 
 class WeatherIcon:
@@ -174,12 +176,17 @@ def _get_radar_page_data() -> dict:
 
     if area not in RADAR_ALLOWED_AREAS:
         area = DEFAULT_RADAR_AREA
-    if radar_type not in RADAR_ALLOWED_TYPES:
+    radar_focus = area == DEFAULT_RADAR_AREA
+    image_area = "nordic" if radar_focus else area
+    radar_types = (
+        RADAR_COMPOSITE_TYPES if image_area in ("nordic", "norway", "xband") else RADAR_ALLOWED_TYPES
+    )
+    if radar_type not in radar_types:
         radar_type = DEFAULT_RADAR_TYPE
 
     radar_url = "https://api.met.no/weatherapi/radar/2.0/?" + urlencode(
         {
-            "area": area,
+            "area": image_area,
             "type": radar_type,
             "content": "animation",
         }
@@ -188,10 +195,11 @@ def _get_radar_page_data() -> dict:
     return {
         "radar_url": radar_url,
         "radar_embed_url": url_for("local_radar_map"),
+        "radar_focus": radar_focus,
         "area": area,
         "radar_type": radar_type,
         "radar_areas": RADAR_ALLOWED_AREAS,
-        "radar_types": RADAR_ALLOWED_TYPES,
+        "radar_types": radar_types,
     }
 
 
