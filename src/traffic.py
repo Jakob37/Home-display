@@ -155,8 +155,8 @@ def _format_board_entry(entry: dict, direction: str) -> dict:
     route = entry.get("route", {})
     realtime_time = entry.get("realtime") or entry.get("scheduled", "")
     scheduled_time = entry.get("scheduled", "")
-    realtime_platform = entry.get("realtime_platform", {})
-    scheduled_platform = entry.get("scheduled_platform", {})
+    realtime_platform = entry.get("realtime_platform") or {}
+    scheduled_platform = entry.get("scheduled_platform") or {}
     origin = route.get("origin", {})
     destination = route.get("destination", {})
     minutes_until = _minutes_until(realtime_time)
